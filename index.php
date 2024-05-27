@@ -8,6 +8,7 @@
         <title>Modelos - SALC</title>
     </head>
     <body>
+        <div class="container text-center">
             <div class="text-center p-3" style="width: 50rem;"> 
 
                 <h1>Modelos de "Pregão"</ha1></br></br>      
@@ -22,7 +23,7 @@
                         <div class="card text-center text-white bg-danger" style="heidth: 400px;">
                             <a class="btn p-3" href='pregao/8666/' role="button">Lei 8.666/93 e 10.520/02</a> 
                         </div>
--->
+                -->
                     </container>
                                 
             </div>
@@ -73,6 +74,6 @@
                     </container>
                                 
             </div>
-        
+        </div>
     </body>
 </html>

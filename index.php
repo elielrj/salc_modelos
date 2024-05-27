@@ -18,9 +18,11 @@
                         <div class="card text-center text-white bg-success" style="heidth: 400px;">
                             <a class="btn p-3" href='pregao/14133/' role="button">Lei 14.133/21</a> 
                         </div>  
+                     <!--   
                         <div class="card text-center text-white bg-danger" style="heidth: 400px;">
                             <a class="btn p-3" href='pregao/8666/' role="button">Lei 8.666/93 e 10.520/02</a> 
                         </div>
+-->
                     </container>
                                 
             </div>

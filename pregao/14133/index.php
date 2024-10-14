@@ -14,14 +14,14 @@
 
     <div class="container py-5">
         <h1>Pregão NLLC 14.133/21</ha1>
-            <p>Modelos de Documentos Necessários para iniciar um novo pregão</p>
+            <p>Documentos</p>
             <ol>
                 <li>
-                    <a class="btn btn-success" href="https://docs.google.com/document/d/1ve_wm07uWD9nmY9wZM7xKahvqHqjxPQ0VELNAxwwbRE/edit?usp=sharing" role="button">DFD do PGC aprovado em A-1
+                    <a class="btn btn-success" href="https://www.gov.br/compras/pt-br/sistemas/conheca-o-compras/sistema-de-planejamento-e-gerenciamento-de-contratacoes/DFDnaprtica2.pdf" role="button">DFD Digital: Documento de Formalização da Demanda
                     </a>
                 </li>
                 <li>
-                    <a class="btn btn-success" href="https://docs.google.com/document/d/1Ks2MtEaXdqZrUZr3vL--Ov9APTGUoHhR/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Estudo Técnico Preliminar - ETP Digital
+                    <a class="btn btn-success" href="https://www.gov.br/compras/pt-br/acesso-a-informacao/manuais/manual-fase-interna/manual-etp-digital-pdf/manual-etp-versao-2.pdf" role="button">ETP Digital: Estudo Técnico Preliminar
                     </a>
                 </li>
                 <li>

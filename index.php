@@ -29,25 +29,12 @@
             <div class="card alert-secondary">
                 <div class="card-body">
                     <div>
-                        <h2 class="card-title">Pregão</h2>
+                        <h2 class="card-title">Pregão CARONA</h2>
                         <h6 class="card-subtitle">NLLC 14.133/21</h6>
                     </div>
                     <br>
                     <div>
                         <a class="card btn p-3 alert-primary" href='carona/14133/' role="button">CARONA</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card alert-secondary">
-                <div class="card-body">
-                    <div>
-                        <h2 class="card-title">Pregão</h2>
-                        <h6 class="card-subtitle">Lei 8.666/93 e 10.520/02</h6>
-                    </div>
-                    <br>
-                    <div>
-                        <a class="card btn p-3 alert-danger" href='carona/8666/' role="button">CARONA</a>
                     </div>
                 </div>
             </div>
@@ -74,19 +61,6 @@
                     <br>
                     <div>
                         <a class="card btn p-3 alert-primary" href='requisitoria/14133/' role="button">REQUISITÓRIA</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card alert-secondary">
-                <div class="card-body">
-                    <div>
-                        <h2 class="card-title">Requisitória</h2>
-                        <h6 class="card-subtitle">Lei 8.666/93 e 10.520/02</h6>
-                    </div>
-                    <br>
-                    <div>
-                        <a class="card btn p-3 alert-danger" href='requisitoria/8666/' role="button">REQUISITÓRIA</a>
                     </div>
                 </div>
             </div>

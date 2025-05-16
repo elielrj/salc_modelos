@@ -36,6 +36,16 @@
                     <a class="btn btn-success" href="https://docs.google.com/spreadsheets/d/1KfmosfshxbJx81BHNu_dTexCP3nIm68B/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Mapa Comparativo de Preços
                     </a>
                 </li>
+                <li>
+                    <a class="btn btn-success" href="https://docs.google.com/document/d/1eM88zpZbO5bclteuaMAcpKYIuf9gtZc6/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Termo de Referência P/ COMPRAS (perm, cons)
+                    </a>
+                </li>
+
+                <li>
+                    <a class="btn btn-success" href="https://docs.google.com/document/d/10o9tOAWa9zLMYqgAZUPMQ1rqCjpf1CuL/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Termo de Referência p/ SERVIÇOS
+                    </a>
+                </li>
+                
             </ol>
     </div>
 </body>

@@ -41,7 +41,7 @@
 
         <li>
             <a class="btn btn-success" href="https://docs.google.com/document/d/194DNDWlBhPWXRLEFZeHUwdT95gcw3Q1h/edit?usp=drive_link&ouid=102031952743882595527&rtpof=true&sd=true" 
-                role="button">Relatório da Pesquisa de preços da CarNA
+                role="button">Relatório da Pesquisa de preços da CarnA
             </a>
         </li>
 

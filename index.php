@@ -21,11 +21,11 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 alert-primary" href='pregao/14133/' role="button">PREGÃO</a>
+                        <a class="card btn p-3 alert-primary" href='pregao/' role="button">PREGÃO</a>
                     </div>
                 </div>
             </div>
-          
+
             <div class="card alert-secondary" style="margin-bottom: 20px">
                 <div class="card-body">
                     <div>
@@ -34,7 +34,7 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 alert-primary" href='carona/14133/' role="button">CARONA</a>
+                        <a class="card btn p-3 alert-primary" href='carona/' role="button">CARONA</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 alert-primary" href='dispensa/14133/' role="button">DISPENSA</a>
+                        <a class="card btn p-3 alert-primary" href='dispensa/' role="button">DISPENSA</a>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 alert-primary" href='requisitoria/14133/' role="button">REQUISITÓRIA</a>
+                        <a class="card btn p-3 alert-primary" href='requisitoria/' role="button">REQUISITÓRIA</a>
                     </div>
                 </div>
             </div>

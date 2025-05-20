@@ -26,7 +26,7 @@
             <li>
                 <p>
                     <a class="btn btn-success" href="https://docs.google.com/document/d/1WnO33Z8Y9F_SXUkqVqolJ-YsRO3Z47K2/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
-                        role="button">índice da Carona
+                        role="button">Índice da Carona
                     </a>
                 </p>
             </li>

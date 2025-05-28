@@ -12,7 +12,31 @@
 <body>
     <div class="container py-5">
         <h1>Documentos de Dispensa de licitação</h1>
-        <p>Documentos (p/ selecionar um fornecedor)</p>
+
+        <p>Documentos da SALC</p>
+        <ol>
+            
+            <li>
+                <p>
+                    <a class="btn btn-success" href="https://docs.google.com/document/d/10BuljKVnh7L04mQacjXKKlB5PcLvSj92/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
+                        role="button">Índice da Carona
+                    </a>
+                </p>
+            </li>
+
+            <li>
+                <p>
+                    <a class="btn btn-success" href="https://docs.google.com/document/d/1KD0n_IQ0V6DDGxGRu0yUxB_xPr-CrmYC/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
+                        role="button">Lista de Verificação da Dispensa
+                    </a>
+                </p>
+            </li>
+
+            
+        </ol>
+
+
+        <p>Documentos do Demandante (p/ selecionar um fornecedor)</p>
         <ol>
 
             <li>
@@ -46,7 +70,7 @@
 
         </ol>
 
-        <p>Documentos (depois da seleção do fornecedor)</p>
+        <p>Documentos do Demandante (depois da seleção do fornecedor)</p>
         <ol>
             <li>
                 <p><a class="btn btn-success"

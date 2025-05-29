@@ -69,7 +69,17 @@
             <li>
                 <p><a class="btn btn-success"
                         href="https://docs.google.com/document/d/1gKYr6n8fEto4GU99wXBZl15VF1PwgVfL/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
-                        role="button">Telefonia Móvel (Contrato)
+                        role="button">Requisitória da Telefonia Móvel (Contrato)
+                    </a></p>
+            </li>
+        </ol>
+
+        <p>Pagamento de Auxílios</p>
+        <ol>
+            <li>
+                <p><a class="btn btn-success"
+                        href="https://docs.google.com/document/d/1XC35slaUGK5Wei5VEV820WNOHkzFM0Un/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
+                        role="button">Requisitória de Auxilio Funeral
                     </a></p>
             </li>
         </ol>

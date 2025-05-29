@@ -65,6 +65,19 @@
                 </div>
             </div>
 
+            <div class="card alert-secondary" style="margin-bottom: 20px">
+                <div class="card-body">
+                    <div>
+                        <h2 class="card-title">BIZUS</h2>
+                        <h6 class="card-subtitle">Help!</h6>
+                    </div>
+                    <br>
+                    <div>
+                        <a class="card btn p-3 alert-success" href='https://drive.google.com/drive/folders/1mKGFH-4Uas5tN4sxxySe2DWq3As9yzrS?usp=sharing' role="button">Instruções</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 

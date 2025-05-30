@@ -4,3 +4,5 @@ services:
     container_name: salc-modelos
     ports:
       - "8080:80"
+    volumes:
+      - .:/var/www/html

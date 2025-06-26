@@ -46,6 +46,15 @@
                     </a>
                 </p>
             </li>
+
+            <li>
+                <p>
+                    <a class="btn btn-success" href="https://docs.google.com/document/d/1-32PHQZ6J08iM6MLZ-fEwHUlPauixQo-/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
+                        role="button">Termo de Encerramento
+                    </a>
+                </p>
+            </li>
+
         </ol>
 
         <p>Documentos do Demandante</p>

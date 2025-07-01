@@ -73,7 +73,7 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 bg-light-subtle" href='https://drive.google.com/drive/folders/1mKGFH-4Uas5tN4sxxySe2DWq3As9yzrS?usp=sharing' role="button">Instruções</a>
+                        <a class="card btn p-3 bg-light-subtle" href='/ajuda/ajuda.php' role="button">Instruções</a>
                     </div>
                 </div>
             </div>

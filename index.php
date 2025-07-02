@@ -73,7 +73,7 @@
                     </div>
                     <br>
                     <div>
-                        <a class="card btn p-3 bg-light-subtle" href='/ajuda/ajuda.php' role="button">Instruções</a>
+                        <a class="card btn p-3 bg-light-subtle" href='ajuda/' role="button">Instruções</a>
                     </div>
                 </div>
             </div>

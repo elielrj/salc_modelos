@@ -11,4 +11,4 @@
 
 Pronto! basta ir ao navegador e digitar:
 
-`http:localhost:8080`
+`http://localhost:8080`

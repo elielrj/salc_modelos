@@ -15,7 +15,15 @@
 
         <p>Documentos da SALC</p>
         <ol>
-            
+           
+            <li>
+                <p>
+                    <a class="btn btn-success" href=" https://docs.google.com/document/d/1LJ1ZN2LrHVApEgjN8WUWJwniiWLkwZda/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
+                        role="button">Capa da Dispensa
+                    </a>
+                </p>
+            </li>
+
             <li>
                 <p>
                     <a class="btn btn-success" href="https://docs.google.com/document/d/10BuljKVnh7L04mQacjXKKlB5PcLvSj92/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"

@@ -13,6 +13,19 @@
     <div class="container py-5 text-center">
 
         <div class="row row-cols-1 row-cols-md-1 row-cols-lg-1 g-1">
+            <div class="card bg-success" style="margin-bottom: 20px">
+                <div class="card-body">
+                    <div>
+                        <h2 class="card-title">Instruções da SALC 2025</h2>
+                        <h6 class="card-subtitle">NLLC 14.133/21</h6>
+                    </div>
+                    <br>
+                    <div>
+                        <a class="card btn p-3 bg-light-subtle" href="https://drive.google.com/drive/folders/1mKGFH-4Uas5tN4sxxySe2DWq3As9yzrS?usp=sharing" role="button">Vigência da Ata</a>
+                    </div>
+                </div>
+            </div>
+
             <div class="card bg-success-subtle" style="margin-bottom: 20px">
                 <div class="card-body">
                     <div>

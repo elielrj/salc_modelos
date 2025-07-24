@@ -27,7 +27,7 @@
             <li>
                 <p>
                     <a class="btn btn-success" href="https://docs.google.com/document/d/10BuljKVnh7L04mQacjXKKlB5PcLvSj92/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
-                        role="button">Índice da Carona
+                        role="button">Índice da dispensa
                     </a>
                 </p>
             </li>

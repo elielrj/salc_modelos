@@ -64,20 +64,11 @@
                 </p>
             </li>
 
-                <li>
+            <li>
                 <p>
                     <a class="btn btn-success"
-                        href="https://docs.google.com/document/d/1X5UpkGmGwZc5SYslsuu_gaubAnNvz36n/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
-                        role="button">Termo de Referência p/ SERVIÇOS
-                    </a>
-                </p>
-            </li>
-
-                        <li>
-                <p>
-                    <a class="btn btn-success"
-                        href="https://docs.google.com/document/d/1aV7iMs53cNdcRdbBvj0gZDKazIThPEsb/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true"
-                        role="button">Termo de Referência P/ COMPRAS
+                        href="..\termo_de_referencia\index.php"
+                        role="button">Termo de Referência
                     </a>
                 </p>
             </li>

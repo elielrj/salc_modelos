@@ -46,14 +46,7 @@
             </li>
             <li>
                 <p>
-                    <a class="btn btn-success" href="https://docs.google.com/document/d/1eM88zpZbO5bclteuaMAcpKYIuf9gtZc6/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Termo de Referência P/ COMPRAS (perm, cons)
-                    </a>
-                </p>
-            </li>
-
-            <li>
-                <p>
-                    <a class="btn btn-success" href="https://docs.google.com/document/d/10o9tOAWa9zLMYqgAZUPMQ1rqCjpf1CuL/edit?usp=sharing&ouid=102031952743882595527&rtpof=true&sd=true" role="button">Termo de Referência p/ SERVIÇOS
+                    <a class="btn btn-success" href="\termo_de_referencia\index.php" role="button">Termo de Referência
                     </a>
                 </p>
             </li>

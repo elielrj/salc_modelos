@@ -1,52 +1,39 @@
-# Arquivos e pastas do sistema operacional
-.DS_Store
-Thumbs.db
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
 
-# Logs e arquivos temporários
+# PHP dependencies
+/vendor/
+/composer.phar
+
+# Node dependencies
+/node_modules/
+
+# Caches / build artifacts
+/tmp/
+/cache/
+/storage/
+/build/
+/dist/
+*.cache
+arp_cache_*.json
+
+# Logs and databases
 *.log
-*.tmp
-*.bak
+/logs/
+*.sqlite
+*.sqlite3
+
+# IDE/editor
+.vscode/
+.idea/
+*.code-workspace
 *.swp
 *.swo
 
-# Diretórios comuns de cache e upload
-cache/
-tmp/
-temp/
-uploads/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Arquivos de configuração locais
-.env
-.env.*
-config.php
-config.local.php
-settings.php
-
-# Dependências gerenciadas via Composer
-/vendor/
-
-# Diretórios e arquivos do PHPUnit
-.phpunit.result.cache
-tests/_output/
-coverage/
-
-# IDEs e editores
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Arquivos de build ou deployment
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Diretórios comuns de CMSs (opcional)
-# WordPress
-wp-content/uploads/
-wp-config.php
-
-# Laravel (caso esteja usando)
-bootstrap/cache/
-storage/

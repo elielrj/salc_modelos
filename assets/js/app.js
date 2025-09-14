@@ -45,6 +45,8 @@ function initAtasSort() {
     keyed.sort((A,B)=>cmp(A.key,B.key)*dir);
     const frag=document.createDocumentFragment(); keyed.forEach(k=>frag.appendChild(k.tr));
     tbody.appendChild(frag); lastTh=th; lastDir=dir; clearIcons(); setIcon(th,dir);
+    // renumerar após ordenação
+    tbody.querySelectorAll('tr').forEach((tr,i)=>{ if(tr.children[0]) tr.children[0].textContent = String(i+1); });
   });
 }
 
@@ -73,9 +75,9 @@ function initAtasTab(){
         const idCompra = a.idCompra || '';
         const tr=document.createElement('tr');
         tr.innerHTML = `
+          <td class="rownum"></td>
           <td><div><strong>${compra}</strong></div>${a.numeroControlePncpCompra? `<div class="small">PNCP: ${a.numeroControlePncpCompra}</div>`:''}</td>
           <td><div>${ataNum}</div>${a.numeroControlePncpAta? `<div class=\"small\">PNCP: ${a.numeroControlePncpAta}</div>`:''}</td>
-          <td><div>${orgao||'—'}</div><div class="small">${unid||'—'} (${uasg||'—'})</div></td>
           <td><div>${modNome||'—'}</div><div class="small">Código: ${modCod||'—'}</div></td>
           <td class="nowrap">${(assin||'').substring(0,10).split('-').reverse().join('/')}</td>
           <td class="nowrap">${(vigIni||'').split('-').reverse().join('/')} à ${(vigFim||'').split('-').reverse().join('/')}</td>
@@ -83,6 +85,8 @@ function initAtasTab(){
           <td class="nowrap">${lnAta? `<a href="${lnAta}" target="_blank" rel="noopener">Ata</a>`:''}${lnComp? ` | <a href="${lnComp}" target="_blank" rel="noopener">Compra</a>`:''}${idCompra? ` | <span class="small text-muted">id: ${idCompra}</span>`:''}</td>`;
         tbody.appendChild(tr);
       });
+      // numerar linhas (Ord)
+      tbody.querySelectorAll('tr').forEach((tr,i)=>{ if(tr.children[0]) tr.children[0].textContent = String(i+1); });
       pane.dataset.loaded='1';
       initAtasSort();
     })
@@ -98,10 +102,16 @@ function initItensTab() {
   const tMain = el('#tPrincipal'); if(!tMain) return;
   const tBodyMain = tMain.tBodies[0]; const thead=tMain.tHead;
   const tBodySel = el('#tSel tbody'); const sumEl=el('#sumTotal'); const copyBtn=el('#btnCopy'); const copyMsg=el('#copyMsg'); const selAll=el('#selAll');
+  const uasgSpan = el('#uasgCurrent'); const uasgSelect = el('#selUasg'); const loadingMsg = document.getElementById('itensLoading');
 
   function _fmtDateBR(s){ if(!s) return '—'; const d=new Date(s); if(isNaN(d)) return s; const dd=String(d.getUTCDate()).padStart(2,'0'); const mm=String(d.getUTCMonth()+1).padStart(2,'0'); const yy=d.getUTCFullYear(); return `${dd}/${mm}/${yy}`; }
 
   // Build table rows from JSON
+  // Keep full dataset and allow filtering by Compra/Ano and text
+  let allItensCache = [];
+  const compraActive = new Set();
+  let textQuery = '';
+  let totalCount = 0;
   function renderItens(itens){
     tBodyMain.innerHTML = '';
     const frag=document.createDocumentFragment();
@@ -118,21 +128,93 @@ function initItensTab() {
       tr.innerHTML = `
         <td class="checkcol"><input type="checkbox" class="sel" data-rowid="${CSS.escape((it.numeroCompra||'nc')+'-'+(it.numeroItem||'ni'))}" data-compra="${numCompraComAno}" data-item="${it.numeroItem||''}" data-desc="${it.descricaoItem||''}" data-forn="${it.nomeRazaoSocialFornecedor||''}" data-ni="${ni}" data-qtd="${it.quantidadeHomologadaItem||0}" data-vu="${it.valorUnitario||0}"></td>
         <td class="rownum">${ord}</td>
-        <td class="center nowrap"><div><strong>${numCompraComAno||'—'}</strong></div><div class="small">Item: ${it.numeroItem||'—'}</div></td>
-        <td>${(it.descricaoItem||'—')}${it.codigoItem? `<div class="small">Código Item: ${it.codigoItem}</div>`:''}</td>
-        <td><div>${it.nomeRazaoSocialFornecedor||'—'}</div><div class="small">CNPJ: ${ni? maskCNPJ(ni) : '—'}</div></td>
+        <td class="left nowrap"><div><strong>${numCompraComAno||'—'}</strong></div><div class="small">Item: ${it.numeroItem||'—'}</div></td>
+        <td class="left">${(it.descricaoItem||'—')}${it.codigoItem? `<div class="small">Código Item: ${it.codigoItem}</div>`:''}</td>
+        <td class="left"><div>${it.nomeRazaoSocialFornecedor||'—'}</div><div class="small">CNPJ: ${ni? maskCNPJ(ni) : '—'}</div></td>
         <td class="center">${(it.quantidadeHomologadaItem||0).toLocaleString('pt-BR')}</td>
         <td class="center">${fmtBRL(it.valorUnitario||0)}</td>
         <td class="center">${fmtBRL(it.valorTotal||0)}</td>
         <td class="center">${_fmtDateBR(it.dataVigenciaInicial)} à ${_fmtDateBR(it.dataVigenciaFinal)}</td>
-        <td class="center">${it.tipoItem||'—'}</td>
-        <td class="center ${sicafClass}">${sicafText}</td>
+        <td class="center nowrap">${it.tipoItem||'—'}</td>
+        <td class="center ${sicafClass}"><i class="bi bi-hand-thumbs-up" title="${sicafText}" aria-label="${sicafText}"></i></td>
         <td class="center">${(it.quantidadeEmpenhada||0).toLocaleString('pt-BR')}</td>
-        <td class="center">${ni? `<a href="api/certidao.php?cnpj=${ni}" target="_blank" rel="noopener">Certidão</a>` : '—'}</td>`;
+        <td class="center nowrap">${ni? `<a href="api/certidao.php?cnpj=${ni}" target="_blank" rel="noopener" title="Certidão TCU"><i class="bi bi-book"></i></a>` : '—'}</td>`;
       frag.appendChild(tr);
     });
     tBodyMain.appendChild(frag);
     renumberRows();
+  }
+
+  function applyAllFilters(){
+    let arr = allItensCache;
+    if (compraActive.size>0){
+      arr = arr.filter(it=> compraActive.has([it.numeroCompra, it.anoCompra].filter(Boolean).join('/')));
+    }
+    const q = (textQuery||'').trim().toLowerCase();
+    if (q){
+      arr = arr.filter(it=>
+        String(it.descricaoItem||'').toLowerCase().includes(q) ||
+        String(it.nomeRazaoSocialFornecedor||'').toLowerCase().includes(q)
+      );
+    }
+    renderItens(arr);
+    const cnt = el('#filterCount');
+    if (cnt) cnt.textContent = `Mostrando ${arr.length} de ${totalCount} itens`;
+  }
+
+  // Build Compra/Ano filter UI
+  function buildCompraFilter(itens){
+    const fwrap = el('#compraFilter');
+    if(!fwrap) return;
+    const counts = new Map();
+    itens.forEach(it=>{
+      const key = [it.numeroCompra, it.anoCompra].filter(Boolean).join('/');
+      if(!key) return;
+      counts.set(key, (counts.get(key)||0)+1);
+    });
+    const keys = Array.from(counts.keys()).sort((a,b)=>{
+      const [ca,aa]=a.split('/').map(n=>parseInt(n||'0',10));
+      const [cb,ab]=b.split('/').map(n=>parseInt(n||'0',10));
+      if(aa!==ab) return aa - ab; // ano asc
+      return ca - cb; // número asc
+    });
+    let html = '<span class="group-title">Filtrar por Pregão:</span>';
+    keys.forEach(k=>{
+      const c = counts.get(k)||0;
+      const id = 'fcomp_'+k.replace(/\D+/g,'_');
+      html += `<label for="${id}"><input type="checkbox" class="compra-chk" id="${id}" data-key="${k}"><span>${k}</span> <span class="small">(${c})</span></label>`;
+    });
+    html += `<span class="actions small">| <span class="link" id="cfClear">limpar</span></span>`;
+    fwrap.innerHTML = html;
+
+    // Events
+    fwrap.addEventListener('change', (e)=>{
+      const cb = e.target && e.target.matches('input.compra-chk') ? e.target : null;
+      if(!cb) return;
+      const key = cb.dataset.key || '';
+      if(!key) return;
+      if(cb.checked) compraActive.add(key); else compraActive.delete(key);
+      applyAllFilters();
+    });
+    fwrap.querySelector('#cfClear')?.addEventListener('click', ()=>{
+      compraActive.clear();
+      fwrap.querySelectorAll('input.compra-chk').forEach(i=> i.checked=false);
+      applyAllFilters();
+    });
+  }
+
+  function setupSearchFilter(){
+    const i = el('#txtSearch'); if(!i) return;
+    if (!i.dataset.bound){
+      const handler = ()=>{ textQuery = i.value || ''; applyAllFilters(); };
+      i.addEventListener('input', handler);
+      i.dataset.bound='1';
+    }
+    const btn = el('#btnClearSearch');
+    if (btn && !btn.dataset.bound){
+      btn.addEventListener('click', ()=>{ i.value=''; i.focus(); textQuery=''; applyAllFilters(); });
+      btn.dataset.bound='1';
+    }
   }
 
   function renumberRows(){ els('#tPrincipal tbody tr').forEach((tr,i)=> tr.querySelector('.rownum').textContent = i+1 ); }
@@ -230,15 +312,100 @@ function initItensTab() {
     setTimeout(()=>{ if(copyMsg) copyMsg.textContent=''; }, 3500);
   });
 
-  // Lazy load: buscar itens da API
-  const loading = el('#itensLoading'); if (loading) loading.textContent = 'Carregando itens...';
-  fetch('api/itens.php')
-    .then(r=>r.json())
-    .then(j=>{ renderItens(j.itens||[]); if(loading) loading.textContent = `Carregados ${j.total||0} itens.`; })
-    .catch(()=>{ if(loading) loading.textContent='Falha ao carregar itens.'; });
+  function loadItens(uasg){
+    if (uasgSpan) uasgSpan.textContent = String(uasg||'');
+    compraActive.clear(); textQuery='';
+    el('#txtSearch') && (el('#txtSearch').value='');
+    if (tBodySel){ tBodySel.innerHTML=''; sumEl && (sumEl.textContent='R$ 0,00'); }
+    el('#compraFilter') && (el('#compraFilter').innerHTML='');
+    if (loadingMsg) loadingMsg.textContent='Carregando itens...';
+    fetch('api/itens.php'+(uasg?`?uasg=${encodeURIComponent(uasg)}`:''))
+      .then(r=>r.json())
+      .then(j=>{ const arr=j.itens||[]; allItensCache = arr.slice(); totalCount = arr.length; buildCompraFilter(arr); setupSearchFilter(); applyAllFilters(); if(loadingMsg) loadingMsg.textContent = `Carregados ${j.total||arr.length} itens.`; })
+      .catch(()=>{ if(loadingMsg) loadingMsg.textContent='Falha ao carregar itens.'; });
+  }
+
+  function populateUasg(){
+    if(!uasgSelect) { loadItens((uasgSpan?.textContent||'').replace(/\D+/g,'')||''); return; }
+    uasgSelect.disabled = true; uasgSelect.innerHTML = '<option>Carregando UGs...</option>';
+    const def = (uasgSpan?.textContent||'').replace(/\D+/g,'') || '';
+    fetch('api/ugs.php')
+      .then(r=>r.json())
+      .then(j=>{
+        const ugs = (j.ugs||[]).slice().sort((a,b)=> (parseInt(a.codug,10)||0) - (parseInt(b.codug,10)||0));
+        let html='';
+        ugs.forEach(u=>{ const val=String(u.codug||''); const sel = (val===def? ' selected' : ''); html += `<option value="${val}"${sel}>${val} — ${u.sigla||''}</option>`; });
+        if(!html){ html = `<option value="${def}">${def}</option>`; }
+        uasgSelect.innerHTML = html; uasgSelect.disabled=false;
+        loadItens(uasgSelect.value||def);
+      })
+      .catch(()=>{ uasgSelect.innerHTML = `<option value="${def}">${def}</option>`; uasgSelect.disabled=false; loadItens(def); });
+    uasgSelect.addEventListener('change', ()=>{ loadItens(uasgSelect.value); });
+  }
+
+  // Inicializar carregando UGs e itens
+  populateUasg();
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelector('a[href="#itens"]')?.addEventListener('shown.bs.tab', initItensTab);
   document.querySelector('a[href="#atas"]')?.addEventListener('shown.bs.tab', initAtasTab);
+  document.querySelector('a[href="#ugs"]')?.addEventListener('shown.bs.tab', initUGsTab);
 });
+
+// ===== UGs (CSV -> tabela + ordenação simples)
+function initUGsTab(){
+  const pane = document.getElementById('ugs');
+  if(!pane || pane.dataset.loaded==='1') return;
+  const tbody = document.querySelector('#tUGs tbody'); if(!tbody) return;
+  const loadingRow = document.createElement('tr'); loadingRow.innerHTML = `<td colspan="5">Carregando UGs...</td>`; tbody.appendChild(loadingRow);
+  fetch('api/ugs.php')
+    .then(r=>r.json())
+    .then(j=>{
+      tbody.innerHTML='';
+      (j.ugs||[]).forEach((u)=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `
+          <td class="rownum"></td>
+          <td class="right">${u.codug||''}</td>
+          <td>${u.sigla||''}</td>
+          <td>${u.cma||''}</td>
+          <td>${u.cidade_estado||''}</td>`;
+        tbody.appendChild(tr);
+      });
+      // numerar linhas
+      tbody.querySelectorAll('tr').forEach((tr,i)=>{ if(tr.children[0]) tr.children[0].textContent = String(i+1); });
+      pane.dataset.loaded='1';
+      initUGsSort();
+    })
+    .catch(()=>{ tbody.innerHTML = '<tr><td colspan="5">Falha ao carregar UGs.</td></tr>'; });
+}
+
+function initUGsSort(){
+  const t = document.getElementById('tUGs');
+  if (!t || t.dataset.sortReady==='1') return; t.dataset.sortReady='1';
+  const thead=t.tHead, tbody=t.tBodies[0]; if(!thead||!tbody) return;
+  function keyForRow(tr,colIndex,type){
+    const raw=(tr.children[colIndex]?.innerText||'').trim();
+    if(type==='rownum') return [...tbody.children].indexOf(tr);
+    if(type==='numero') return parseInt(raw.replace(/\D+/g,''),10)||0;
+    return raw.toLowerCase();
+  }
+  const cmp=(a,b)=> a<b? -1 : a>b? 1 : 0;
+  let lastTh=null, lastDir=1;
+  function clearIcons(){ thead.querySelectorAll('.sort-ind').forEach(s=>s.textContent=''); }
+  function setIcon(th,dir){ const ind = th.querySelector('.sort-ind'); if (ind) ind.textContent = (dir===1?'▲':'▼'); }
+  thead.addEventListener('click', (e)=>{
+    const th=e.target.closest('th'); if(!th||th.classList.contains('noclick')) return;
+    const type=th.dataset.sort; if(!type) return;
+    const colIndex=[...th.parentNode.children].indexOf(th);
+    const rows=[...tbody.querySelectorAll('tr')];
+    const keyed=rows.map(tr=>({tr, key:keyForRow(tr,colIndex,type)}));
+    const dir=(lastTh===th && lastDir===1)? -1 : 1;
+    keyed.sort((A,B)=>cmp(A.key,B.key)*dir);
+    const frag=document.createDocumentFragment(); keyed.forEach(k=>frag.appendChild(k.tr));
+    tbody.appendChild(frag); lastTh=th; lastDir=dir; clearIcons(); setIcon(th,dir);
+    // renumerar
+    tbody.querySelectorAll('tr').forEach((tr,i)=>{ if(tr.children[0]) tr.children[0].textContent = String(i+1); });
+  });
+}

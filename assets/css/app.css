@@ -17,6 +17,8 @@
   padding: 8px;
   vertical-align: middle;
 }
+#itens thead th { text-align: center; }
+#itens tbody td { text-align: center; }
 #itens th, #atas th { background:#f7f7f7; position: sticky; top: 0; }
 
 .left { text-align: left !important; }
@@ -56,3 +58,19 @@
   /* evita que textos longos estourem a célula */
   #itens td, #itens th { overflow-wrap: anywhere; }
 }
+
+/* Filtro Compra/Ano */
+#itens .compra-filter { margin: 8px 0 12px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; }
+#itens .compra-filter .group-title { font-weight: 600; color: #333; margin-right: 8px; }
+#itens .compra-filter label { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 1px solid #ddd; border-radius: 6px; background:#fff; cursor: pointer; }
+#itens .compra-filter label:hover { background:#fafafa; }
+#itens .compra-filter .small { color: var(--muted); }
+#itens .compra-filter .actions { margin-left: 6px; }
+#itens .compra-filter .link { color:#0d6efd; cursor:pointer; text-decoration: underline; }
+
+/* Busca por descrição/fornecedor */
+#itens .search-filter { display:flex; justify-content:flex-end; align-items:center; gap:8px; margin: 0 0 8px; }
+#itens .search-filter input { width: 100%; max-width: 440px; padding: 8px 10px; border:1px solid #ddd; border-radius:6px; }
+
+/* UG picker */
+#itens .uasg-picker { display:flex; align-items:center; gap:8px; margin: 4px 0 6px; }

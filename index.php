@@ -18,6 +18,7 @@ if (isset($_GET['certidao'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous">
     <title>Modelos - NLLC 14.133/21</title>
     <link rel="icon" href="https://www.gov.br/compras/pt-br/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/app.css">
@@ -41,6 +42,8 @@ if (isset($_GET['certidao'])) {
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
             </li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ugs" role="tab">UGs</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#sped" role="tab">Processos Digitais SPED 3.0</a></li>
         </ul>
 
         <div class="tab-content">
@@ -70,6 +73,12 @@ if (isset($_GET['certidao'])) {
             </div>
             <div class="tab-pane fade" id="atas" role="tabpanel">
                 <?php include __DIR__ . '/views/atas.php'; ?>
+            </div>
+            <div class="tab-pane fade" id="ugs" role="tabpanel">
+                <?php include __DIR__ . '/views/ugs.php'; ?>
+            </div>
+            <div class="tab-pane fade" id="sped" role="tabpanel">
+                <?php include __DIR__ . '/views/sped.php'; ?>
             </div>
         </div>
     </div>

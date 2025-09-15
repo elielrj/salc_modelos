@@ -30,26 +30,22 @@ if (isset($_GET['certidao'])) {
 
         <!-- Navegação -->
         <ul class="nav nav-tabs mb-4" id="menuTabs" role="tablist">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab">Início</a></li>
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#ugs" role="tab">UGs</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#pregao" role="tab">Pregão</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#carona" role="tab">Carona</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#dispensa" role="tab">Dispensa</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#requisitoria"
                     role="tab">Requisitórias</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ajuda" role="tab">Ajuda</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#termo" role="tab">Termo de
                     Referência</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
             </li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ugs" role="tab">UGs</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos" role="tab">Contratos</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#sped" role="tab">Processos Digitais SPED 3.0</a></li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane fade show active" id="home" role="tabpanel">
-                <?php include __DIR__ . '/views/home.php'; ?>
-            </div>
             <div class="tab-pane fade" id="pregao" role="tabpanel">
                 <?php include __DIR__ . '/views/pregao.php'; ?>
             </div>
@@ -62,9 +58,6 @@ if (isset($_GET['certidao'])) {
             <div class="tab-pane fade" id="requisitoria" role="tabpanel">
                 <?php include __DIR__ . '/views/requisitoria.php'; ?>
             </div>
-            <div class="tab-pane fade" id="ajuda" role="tabpanel">
-                <?php include __DIR__ . '/views/ajuda.php'; ?>
-            </div>
             <div class="tab-pane fade" id="termo" role="tabpanel">
                 <?php include __DIR__ . '/views/termo.php'; ?>
             </div>
@@ -74,11 +67,14 @@ if (isset($_GET['certidao'])) {
             <div class="tab-pane fade" id="atas" role="tabpanel">
                 <?php include __DIR__ . '/views/atas.php'; ?>
             </div>
-            <div class="tab-pane fade" id="ugs" role="tabpanel">
+            <div class="tab-pane fade show active" id="ugs" role="tabpanel">
                 <?php include __DIR__ . '/views/ugs.php'; ?>
             </div>
             <div class="tab-pane fade" id="sped" role="tabpanel">
                 <?php include __DIR__ . '/views/sped.php'; ?>
+            </div>
+            <div class="tab-pane fade" id="contratos" role="tabpanel">
+                <?php include __DIR__ . '/views/contratos.php'; ?>
             </div>
         </div>
     </div>

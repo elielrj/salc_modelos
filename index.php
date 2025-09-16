@@ -25,7 +25,7 @@ if (isset($_GET['certidao'])) {
 </head>
 
 <body>
-    <div class="container py-5">
+    <div class="container-fluid py-5">
         <h1 class="text-center mb-4">Modelos - NLLC 14.133/21</h1>
 
         <!-- Navegação -->

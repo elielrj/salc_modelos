@@ -1,3 +1,15 @@
+/* Layout overrides */
+html, body { height: 100%; }
+body { margin: 0; }
+/* Ocupa toda a largura da tela, mantendo o alinhamento central do Bootstrap */
+.container { max-width: 100% !important; }
+
+/* Mantém as abas de navegação centralizadas na largura total */
+.nav.nav-tabs { justify-content: center; }
+
+/* Centraliza blocos largos mantendo responsividade */
+.centered-block { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
 /* Base vars */
 #itens, #atas, #contratos {
   --fg: #111;

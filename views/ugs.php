@@ -1,7 +1,7 @@
 <h3>Unidades Gestoras (UGs)</h3>
 <div class="meta">Lista carregada do CSV local.</div>
 
-<div class="table-responsive">
+<div class="table-responsive centered-block">
   <table id="tUGs" class="table table-sm align-middle">
     <thead>
       <tr>
@@ -15,4 +15,3 @@
     <tbody></tbody>
   </table>
 </div>
-

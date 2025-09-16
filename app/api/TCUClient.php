@@ -44,7 +44,7 @@ class TCUClient
             foreach ($paths as $p) {
                 if (isset($j[$p]) && is_string($j[$p]) && strlen($j[$p]) > 100) { $b64 = $j[$p]; break; }
             }
-            if (!$b64) {
+            if (!$b64 && is_array($j)) {
                 array_walk_recursive($j, function($v) use (&$b64){ if(!$b64 && is_string($v) && strlen($v)>200 && preg_match('~^[A-Za-z0-9/+=\r\n]+$~',$v)) $b64=$v; });
             }
             if ($b64) {
@@ -55,4 +55,3 @@ class TCUClient
         return ['__error' => 'Falha TCU', '__debug' => [$code, $err, $err2 ?? null]];
     }
 }
-

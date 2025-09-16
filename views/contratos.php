@@ -33,6 +33,7 @@
         <th class="right">Valor Total</th>
         <th>Vigência</th>
         <th>Processo</th>
+        <th>TCU</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -49,7 +50,8 @@
 <table id="cSel" class="table table-sm">
   <thead>
     <tr>
-      <th>Pregão</th>
+      <th>Compra</th>
+      <th>Contrato</th>
       <th>Item</th>
       <th class="left">Descrição</th>
       <th class="left">Fornecedor</th>
@@ -63,7 +65,7 @@
   <tbody></tbody>
   <tfoot>
     <tr>
-      <td colspan="7" class="right">TOTAL</td>
+      <td colspan="8" class="right">TOTAL</td>
       <td class="right" id="cSumTotal">R$ 0,00</td>
       <td></td>
     </tr>

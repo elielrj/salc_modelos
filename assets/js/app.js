@@ -475,6 +475,7 @@ function initContratosTab(){
     const init=Math.min(1, Math.max(0, d.qtd));
     tr.innerHTML = `
       <td>${d.compra||'—'}</td>
+      <td>${d.contrato||'—'}</td>
       <td class="nowrap">${d.item||'—'}</td>
       <td class="left">${d.desc||''}</td>
       <td class="left">${d.forn||''}<div class="small">CNPJ: ${maskCNPJ(d.ni)||'—'}</div></td>
@@ -502,7 +503,7 @@ function initContratosTab(){
       const d = makeRowData(rec);
       const tr=document.createElement('tr'); tr.dataset.compra=d.compra; tr.dataset.item=d.item; tr.dataset.rowid=d.key;
       tr.innerHTML = `
-        <td class="checkcol"><input type="checkbox" class="sel" data-rowid="${d.key}" data-compra="${d.compra}" data-item="${d.item}" data-desc="${d.desc}" data-forn="${d.forn}" data-ni="${d.ni}" data-qtd="${d.qtd}" data-vu="${d.vu}"></td>
+        <td class="checkcol"><input type="checkbox" class="sel" data-rowid="${d.key}" data-compra="${d.compra}" data-contrato="${d.contrato||''}" data-item="${d.item}" data-desc="${d.desc}" data-forn="${d.forn}" data-ni="${d.ni}" data-qtd="${d.qtd}" data-vu="${d.vu}"></td>
         <td class="rownum">${idx+1}</td>
         <td>${d.contrato||'—'}</td>
         <td>${d.modalidade||'—'}</td>
@@ -515,6 +516,7 @@ function initContratosTab(){
         <td class="right">${fmtBRL(d.vt||0)}</td>
         <td>${d.vig||''}</td>
         <td>${d.processo||'—'}${d.inclusao? `<div class="small">Incluído: ${d.inclusao}</div>`:''}</td>
+        <td class="center nowrap">${d.ni? `<a href="api/certidao.php?cnpj=${d.ni}" target="_blank" rel="noopener" title="Certidão TCU"><i class="bi bi-book"></i></a>` : '—'}</td>
         `;
       tBodyMain.appendChild(tr);
     });
@@ -560,8 +562,8 @@ function initContratosTab(){
   // seleção
   pane.querySelector('#cPrincipal')?.addEventListener('change', (e)=>{
     const cb = e.target && e.target.matches('tbody input.sel') ? e.target : null; if(!cb) return;
-    const data = { rowid: cb.dataset.rowid, compra: cb.dataset.compra, item: cb.dataset.item, desc: cb.dataset.desc, forn: cb.dataset.forn, ni: cb.dataset.ni, qtd: cb.dataset.qtd, vu: cb.dataset.vu };
-    if (cb.checked){ cb.closest('tr')?.classList?.add('selrow'); addSelRow(makeRowData({ numeroCompra:data.compra?.split('/')[0], anoCompra:data.compra?.split('/')[1], numeroItem:data.item, descricaoItem:data.desc, nomeRazaoSocialFornecedor:data.forn, niFornecedor:data.ni, quantidadeItem:data.qtd, valorUnitarioItem:data.vu })); }
+    const data = { rowid: cb.dataset.rowid, compra: cb.dataset.compra, contrato: cb.dataset.contrato||'', item: cb.dataset.item, desc: cb.dataset.desc, forn: cb.dataset.forn, ni: cb.dataset.ni, qtd: cb.dataset.qtd, vu: cb.dataset.vu };
+    if (cb.checked){ cb.closest('tr')?.classList?.add('selrow'); addSelRow(makeRowData({ numeroCompra:data.compra?.split('/')[0], anoCompra:data.compra?.split('/')[1], numeroContrato:data.contrato, numeroItem:data.item, descricaoItem:data.desc, nomeRazaoSocialFornecedor:data.forn, niFornecedor:data.ni, quantidadeItem:data.qtd, valorUnitarioItem:data.vu })); }
     else { cb.closest('tr')?.classList?.remove('selrow'); removeSelRow(data.rowid); }
   });
   selAll?.addEventListener('change', ()=>{ pane.querySelectorAll('#cPrincipal tbody input.sel').forEach(cb=>{ if(cb.checked!==selAll.checked){ cb.checked=selAll.checked; cb.dispatchEvent(new Event('change',{bubbles:true})); } }); });

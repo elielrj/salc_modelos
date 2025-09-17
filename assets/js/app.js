@@ -442,8 +442,6 @@ function initContratosListaTab(){
   const selPrintBtn = pane.querySelector('#clBtnPrint');
   const selCopyMsg = pane.querySelector('#clCopyMsg');
   const selAll = pane.querySelector('#clSelAll');
-  const toggleObj = pane.querySelector('#clToggleObj');
-  const objetosWrap = pane.querySelector('#clObjetosWrap');
 
   function fmtDate(iso){ try{ return (iso? new Date(iso).toLocaleDateString('pt-BR') : ''); }catch(e){ return iso||''; } }
   function fmtDateTime(iso){ try{ if(!iso) return ''; const d=new Date(iso); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso||''; } }
@@ -453,10 +451,6 @@ function initContratosListaTab(){
   let activeContratos = new Set();
   let textQuery = '';
   const selectedKeys = new Set();
-  let showObjetos = false;
-  let lastRenderedList = [];
-
-  toggleObj?.addEventListener('change', ()=>{ showObjetos = !!toggleObj.checked; renderObjetos(lastRenderedList); });
 
   function renderRows(list){
     tbody.innerHTML = '';
@@ -497,6 +491,7 @@ function initContratosListaTab(){
         <td>${modalidade}</td>
         <td>${categoria}</td>
         <td>${forn}</td>
+        <td class="left">${obj}</td>
         <td>${vig}</td>
         <td class=\"right\">${diasRest}</td>
         <td class="right">${vgl}</td>
@@ -509,21 +504,7 @@ function initContratosListaTab(){
       </tr>`;
     }).join('');
     tbody.innerHTML = rows;
-    // renumerar somente linhas principais
-    let idx=0; tbody.querySelectorAll('tr').forEach((tr)=>{ const cell=tr.querySelector('.rownum'); if(cell){ idx++; cell.textContent=String(idx); } });
-  }
-
-  function renderObjetos(list){
-    if(!objetosWrap) return;
-    if(!showObjetos){ objetosWrap.style.display='none'; objetosWrap.innerHTML=''; return; }
-    objetosWrap.style.display='block';
-    const html = list.map((rec)=>{
-      const obj = (rec.objeto||'').trim(); if(!obj) return '';
-      const num = rec.numeroContrato||'';
-      const forn = rec.nomeRazaoSocialFornecedor||'';
-      return `<div class="border rounded p-2 mb-2"><div class="small text-muted">Contrato: <strong>${num}</strong> — Fornecedor: ${forn||'—'}</div><div>${obj}</div></div>`;
-    }).filter(Boolean).join('');
-    objetosWrap.innerHTML = html || '<div class="small text-muted">Sem objetos para exibir.</div>';
+    tbody.querySelectorAll('tr').forEach((tr,i)=>{ const cell=tr.querySelector('.rownum'); if(cell) cell.textContent=String(i+1); });
   }
 
   function applyFilters(){
@@ -535,9 +516,7 @@ function initContratosListaTab(){
     if (activeContratos.size){ list = list.filter(r=> activeContratos.has(String(r.numeroContrato||''))); }
     if (textQuery){ const q = textQuery.toLowerCase(); list = list.filter(r=> String(r.objeto||'').toLowerCase().includes(q) || String(r.nomeRazaoSocialFornecedor||'').toLowerCase().includes(q)); }
     filterCount && (filterCount.textContent = `(${list.length} de ${allRows.length})`);
-    lastRenderedList = list;
     renderRows(list);
-    renderObjetos(list);
   }
 
   function buildCompraFilter(arr){
@@ -641,7 +620,7 @@ function initContratosListaTab(){
       const j = await r.json();
       if (j.error){ msg && (msg.textContent = 'Falha ao consultar.'); return; }
       const arr = j.resultado || [];
-      if(!arr.length){ tbody.innerHTML = '<tr><td colspan="16">Nenhum contrato encontrado.</td></tr>'; msg && (msg.textContent=''); return; }
+      if(!arr.length){ tbody.innerHTML = '<tr><td colspan="17">Nenhum contrato encontrado.</td></tr>'; msg && (msg.textContent=''); return; }
       allRows = arr.slice();
       buildCompraFilter(allRows);
       buildContratoFilter(allRows);
@@ -650,7 +629,7 @@ function initContratosListaTab(){
       const f = j.filtros || {};
       const fmtBR = (s)=> s? s.split('-').reverse().join('/') : '';
       foot && (foot.textContent = `Período: ${fmtBR(f.dataVigenciaInicialMin)} a ${fmtBR(f.dataVigenciaInicialMax)}`);
-    }catch(e){ console.error(e); tbody.innerHTML = '<tr><td colspan="16">Erro ao consultar.</td></tr>'; msg && (msg.textContent='Falha ao carregar.'); }
+    }catch(e){ console.error(e); tbody.innerHTML = '<tr><td colspan="17">Erro ao consultar.</td></tr>'; msg && (msg.textContent='Falha ao carregar.'); }
     finally{ delete pane.dataset.loading; }
   }
 
@@ -691,8 +670,8 @@ function initContratosListaTab(){
       keyed.sort((A,B)=> (A.key<B.key?-1:(A.key>B.key?1:0)) * dir);
       const frag=document.createDocumentFragment(); keyed.forEach(k=>frag.appendChild(k.tr));
       tbody.appendChild(frag);
-      // renumerar col Ord apenas nas linhas principais
-      let idx=0; tbody.querySelectorAll('tr').forEach((tr)=>{ const cell=tr.querySelector('.rownum'); if(cell){ idx++; cell.textContent=String(idx); } });
+      // renumerar col Ord
+      tbody.querySelectorAll('tr').forEach((tr,i)=>{ const cell=tr.querySelector('.rownum'); if(cell) cell.textContent=String(i+1); });
       lastTh=th; lastDir=dir; clearIcons(); setIcon(th,dir);
     });
   }

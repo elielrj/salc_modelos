@@ -23,8 +23,7 @@
 </div>
 
 <div class="small" style="margin-top:6px;">
-  <label><input type="checkbox" id="clToggleObj"> Mostrar objetos abaixo da tabela</label>
-  <div class="small text-muted">O campo Objeto foi movido para fora da tabela e pode ser ocultado.</div>
+  <label><input type="checkbox" id="clToggleObj"> Mostrar “Objeto” dentro da coluna Compra</label>
   
 </div>
 
@@ -55,8 +54,6 @@
   <div class="small text-muted" id="clFoot"></div>
   
 </div>
-
-<div id="clObjetosWrap" class="mt-2"></div>
 
 <!-- Tabela selecionados -->
 <h4 class="mt-4 mb-2">Contratos selecionados</h4>

@@ -19,14 +19,14 @@ if (isset($_GET['certidao'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous">
-    <title>Modelos - NLLC 14.133/21</title>
+    <title>Modelos &amp; Controle de Pregões e Contratos</title>
     <link rel="icon" href="https://www.gov.br/compras/pt-br/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/app.css">
 </head>
 
 <body>
     <div class="container-fluid py-5">
-        <h1 class="text-center mb-4">Modelos - NLLC 14.133/21</h1>
+        <h1 class="text-center mb-4">Modelos &amp; Controle de Pregões e Contratos</h1>
 
         <!-- Navegação -->
         <ul class="nav nav-tabs mb-4" id="menuTabs" role="tablist">

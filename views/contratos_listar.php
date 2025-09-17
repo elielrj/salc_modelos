@@ -22,11 +22,6 @@
   <span id="clFilterCount" class="small" style="margin-left:8px;"></span>
 </div>
 
-<div class="small" style="margin-top:6px;">
-  <label><input type="checkbox" id="clToggleObj"> Mostrar “Objeto” dentro da coluna Compra</label>
-  
-</div>
-
 <div class="table-responsive mt-2">
   <table class="table table-sm align-middle" id="clTable">
     <thead>
@@ -38,6 +33,7 @@
         <th data-sort="text">Modalidade</th>
         <th data-sort="text">Categoria</th>
         <th data-sort="text">Fornecedor</th>
+        <th data-sort="text">Objeto</th>
         <th data-sort="date">Vigência</th>
         <th class="right" data-sort="numero">Dias p/ vencer</th>
         <th class="right" data-sort="money">Valor Global</th>

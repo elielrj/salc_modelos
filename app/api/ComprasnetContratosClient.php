@@ -3,9 +3,9 @@ require_once __DIR__ . '/../lib/HttpClient.php';
 
 class ComprasnetContratosClient
 {
-    public const BASE_URL = 'https://contratos.comprasnet.gov.br/transparencia/contratos';
+    const BASE_URL = 'https://contratos.comprasnet.gov.br/transparencia/contratos';
 
-    public static function listPage(array $params, int $pagina, bool $cache = true, int $ttl = 600, int $maxRetries = 4, float $baseBackoff = 1.0): array
+    public static function listPage(array $params, $pagina, $cache = true, $ttl = 600, $maxRetries = 4, $baseBackoff = 1.0)
     {
         // Heuristic params; the endpoint is public transparency and may accept these
         $merged = $params + [
@@ -17,4 +17,3 @@ class ComprasnetContratosClient
         return $json;
     }
 }
-

@@ -1,7 +1,7 @@
 <?php
 class TCUClient
 {
-    public static function getCertidaoPdf(string $cnpj)
+    public static function getCertidaoPdf($cnpj)
     {
         $cnpj = preg_replace('/\D+/', '', (string)$cnpj);
         if (strlen($cnpj) !== 14) return ['__error' => 'CNPJ inválido'];
@@ -52,6 +52,6 @@ class TCUClient
                 if ($pdf !== false && str_starts_with($pdf, '%PDF')) return $pdf;
             }
         }
-        return ['__error' => 'Falha TCU', '__debug' => [$code, $err, $err2 ?? null]];
+        return ['__error' => 'Falha TCU', '__debug' => [$code, $err, isset($err2) ? $err2 : null]];
     }
 }

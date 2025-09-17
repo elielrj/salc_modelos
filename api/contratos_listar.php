@@ -31,15 +31,15 @@ try {
             $resp = ContratosListaClient::listPage($params, $p, false, CACHE_TTL, MAX_RETRIES, BASE_BACKOFF);
             if (isset($resp['__error'])) {
                 http_response_code(502);
-                echo json_encode(['error' => $resp['__error'], 'debug' => $resp['__debug'] ?? null, 'params' => $params]);
+                echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null), 'params' => $params]);
                 exit;
             }
             $lote = isset($resp['resultado']) && is_array($resp['resultado']) ? $resp['resultado'] : [];
             foreach ($lote as $rec) {
-                $key = (string)($rec['numeroContrato'] ?? '') . '|' . (string)($rec['numeroCompra'] ?? '');
+                $key = (string)(isset($rec['numeroContrato']) ? $rec['numeroContrato'] : '') . '|' . (string)(isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '');
                 if (isset($uniq[$key])) continue; $uniq[$key] = 1; $lista[] = $rec;
             }
-            $rest = $resp['paginasRestantes'] ?? null;
+            $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
             if ($rest !== null && (int)$rest <= 0) break;
             $p++; if ($p > 2000) break;
             if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);
@@ -75,7 +75,7 @@ try {
         'paginasRestantes' => 0,
         'debug' => ['sampleUrl' => ContratosListaClient::BASE_URL],
     ]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'internal', 'message' => $e->getMessage()]);
 }

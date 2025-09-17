@@ -1,9 +1,9 @@
 <?php
 class Env
 {
-    private static array $vars = [];
+    private static $vars = [];
 
-    public static function load(string $path): void
+    public static function load($path)
     {
         if (!is_file($path)) return;
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
@@ -19,9 +19,8 @@ class Env
         }
     }
 
-    public static function get(string $key, $default = null)
+    public static function get($key, $default = null)
     {
         return array_key_exists($key, self::$vars) ? self::$vars[$key] : $default;
     }
 }
-

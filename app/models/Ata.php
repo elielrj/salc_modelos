@@ -1,27 +1,26 @@
 <?php
 class Ata
 {
-    public static function fromApi(array $a): array
+    public static function fromApi(array $a)
     {
         return [
-            'numeroAtaRegistroPreco' => $a['numeroAtaRegistroPreco'] ?? ($a['numeroAta'] ?? '—'),
-            'codigoUnidadeGerenciadora' => $a['codigoUnidadeGerenciadora'] ?? '',
-            'nomeUnidadeGerenciadora' => $a['nomeUnidadeGerenciadora'] ?? '',
-            'nomeOrgao' => $a['nomeOrgao'] ?? '',
-            'codigoModalidadeCompra' => $a['codigoModalidadeCompra'] ?? '',
-            'nomeModalidadeCompra' => $a['nomeModalidadeCompra'] ?? '',
-            'dataAssinatura' => $a['dataAssinatura'] ?? '',
-            'dataVigenciaInicial' => $a['dataVigenciaInicial'] ?? '',
-            'dataVigenciaFinal' => $a['dataVigenciaFinal'] ?? '',
-            'valorTotal' => (float)($a['valorTotal'] ?? 0),
-            'numeroCompra' => $a['numeroCompra'] ?? '',
-            'anoCompra' => $a['anoCompra'] ?? '',
-            'linkAtaPNCP' => $a['linkAtaPNCP'] ?? ($a['linkAta'] ?? ''),
-            'linkCompraPNCP' => $a['linkCompraPNCP'] ?? ($a['linkCompra'] ?? ''),
-            'idCompra' => $a['idCompra'] ?? ($a['id'] ?? ''),
-            'numeroControlePncpCompra' => $a['numeroControlePncpCompra'] ?? '',
-            'numeroControlePncpAta' => $a['numeroControlePncpAta'] ?? '',
+            'numeroAtaRegistroPreco' => isset($a['numeroAtaRegistroPreco']) ? $a['numeroAtaRegistroPreco'] : (isset($a['numeroAta']) ? $a['numeroAta'] : '—'),
+            'codigoUnidadeGerenciadora' => isset($a['codigoUnidadeGerenciadora']) ? $a['codigoUnidadeGerenciadora'] : '',
+            'nomeUnidadeGerenciadora' => isset($a['nomeUnidadeGerenciadora']) ? $a['nomeUnidadeGerenciadora'] : '',
+            'nomeOrgao' => isset($a['nomeOrgao']) ? $a['nomeOrgao'] : '',
+            'codigoModalidadeCompra' => isset($a['codigoModalidadeCompra']) ? $a['codigoModalidadeCompra'] : '',
+            'nomeModalidadeCompra' => isset($a['nomeModalidadeCompra']) ? $a['nomeModalidadeCompra'] : '',
+            'dataAssinatura' => isset($a['dataAssinatura']) ? $a['dataAssinatura'] : '',
+            'dataVigenciaInicial' => isset($a['dataVigenciaInicial']) ? $a['dataVigenciaInicial'] : '',
+            'dataVigenciaFinal' => isset($a['dataVigenciaFinal']) ? $a['dataVigenciaFinal'] : '',
+            'valorTotal' => (float)(isset($a['valorTotal']) ? $a['valorTotal'] : 0),
+            'numeroCompra' => isset($a['numeroCompra']) ? $a['numeroCompra'] : '',
+            'anoCompra' => isset($a['anoCompra']) ? $a['anoCompra'] : '',
+            'linkAtaPNCP' => isset($a['linkAtaPNCP']) ? $a['linkAtaPNCP'] : (isset($a['linkAta']) ? $a['linkAta'] : ''),
+            'linkCompraPNCP' => isset($a['linkCompraPNCP']) ? $a['linkCompraPNCP'] : (isset($a['linkCompra']) ? $a['linkCompra'] : ''),
+            'idCompra' => isset($a['idCompra']) ? $a['idCompra'] : (isset($a['id']) ? $a['id'] : ''),
+            'numeroControlePncpCompra' => isset($a['numeroControlePncpCompra']) ? $a['numeroControlePncpCompra'] : '',
+            'numeroControlePncpAta' => isset($a['numeroControlePncpAta']) ? $a['numeroControlePncpAta'] : '',
         ];
     }
 }
-

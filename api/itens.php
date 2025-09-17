@@ -11,7 +11,7 @@ try {
     $vigMin = (clone $today)->modify('-365 days')->format('Y-m-d');
     $vigMax = (clone $today)->modify('+365 days')->format('Y-m-d');
 
-    $uasg = (int)($_GET['uasg'] ?? UASG);
+    $uasg = (int)(isset($_GET['uasg']) ? $_GET['uasg'] : UASG);
     $paramsBase = [
         'tamanhoPagina' => 50,
         'codigoUnidadeGerenciadora' => $uasg,
@@ -26,26 +26,25 @@ try {
         $resp = ARPItensClient::listPage($paramsBase, $p, true, CACHE_TTL, MAX_RETRIES, BASE_BACKOFF);
         if (isset($resp['__error'])) {
             http_response_code(502);
-            echo json_encode(['error' => $resp['__error'], 'debug' => $resp['__debug'] ?? null]);
+            echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null)]);
             exit;
         }
-        $lote = $resp['resultado'] ?? [];
+        $lote = isset($resp['resultado']) ? $resp['resultado'] : [];
         if (!is_array($lote) || !count($lote)) break;
         foreach ($lote as $rec) {
-            $k = ($rec['numeroCompra'] ?? '') . '|' . ($rec['anoCompra'] ?? '') . '|' . ($rec['numeroItem'] ?? '');
+            $k = (isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '') . '|' . (isset($rec['anoCompra']) ? $rec['anoCompra'] : '') . '|' . (isset($rec['numeroItem']) ? $rec['numeroItem'] : '');
             if (!isset($seen[$k])) {
                 $lista[] = Item::fromApi($rec);
                 $seen[$k] = true;
             }
         }
-        $rest = $resp['paginasRestantes'] ?? null;
+        $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
         if ($rest !== null && (int)$rest <= 0) break;
         $p++; if ($p > 2000) break;
         if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);
     }
     echo json_encode(['uasg' => $uasg, 'vigencia' => [$vigMin, $vigMax], 'total' => count($lista), 'itens' => $lista]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'internal', 'message' => $e->getMessage()]);
 }
-

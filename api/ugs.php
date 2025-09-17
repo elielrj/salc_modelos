@@ -25,8 +25,7 @@ try {
     }
     fclose($fh);
     echo json_encode(['total' => count($rows), 'ugs' => $rows]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'internal', 'message' => $e->getMessage()]);
 }
-

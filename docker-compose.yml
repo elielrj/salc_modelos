@@ -1,6 +1,6 @@
 services:
   web:
-    image: php:8.3-apache
+    image: php:7.4.33-apache #php:8.3-apache
     container_name: salc-modelos
     ports:
       - "8080:80"

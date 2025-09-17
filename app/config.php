@@ -1,4 +1,7 @@
 <?php
+// Load polyfills first for PHP 7.4 compatibility
+require_once __DIR__ . '/polyfills.php';
+
 require_once __DIR__ . '/Env.php';
 
 // Load .env if present
@@ -15,4 +18,3 @@ define('CACHE_TTL', (int) Env::get('CACHE_TTL', '600'));
 define('REQUEST_DELAY_MS', (int) Env::get('REQUEST_DELAY_MS', '200'));
 define('MAX_RETRIES', (int) Env::get('MAX_RETRIES', '6'));
 define('BASE_BACKOFF', (float) Env::get('BASE_BACKOFF', '1.0'));
-

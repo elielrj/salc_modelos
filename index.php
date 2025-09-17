@@ -41,8 +41,9 @@ if (isset($_GET['certidao'])) {
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
             </li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos" role="tab">Contratos</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#sped" role="tab">Processos Digitais SPED 3.0</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos" role="tab">Itens Contrato</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos-listar" role="tab">Listar Contratos</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#sped" role="tab">SPED 3.0</a></li>
         </ul>
 
         <div class="tab-content">
@@ -75,6 +76,9 @@ if (isset($_GET['certidao'])) {
             </div>
             <div class="tab-pane fade" id="contratos" role="tabpanel">
                 <?php include __DIR__ . '/views/contratos.php'; ?>
+            </div>
+            <div class="tab-pane fade" id="contratos-listar" role="tabpanel">
+                <?php include __DIR__ . '/views/contratos_listar.php'; ?>
             </div>
         </div>
     </div>

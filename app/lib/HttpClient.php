@@ -20,7 +20,7 @@ class HttpClient
                 CURLOPT_CONNECTTIMEOUT => 20,
                 CURLOPT_TIMEOUT        => 45,
                 CURLOPT_HTTPHEADER     => [
-                    'Accept: application/json',
+                    'Accept: */*',
                     'User-Agent: salc-modelos/1.0 (+retry/backoff)'
                 ],
                 CURLOPT_HEADERFUNCTION => function($curl, $header) use (&$respHeaders) {
@@ -71,4 +71,3 @@ class HttpClient
         }
     }
 }
-

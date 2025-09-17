@@ -76,6 +76,7 @@ function initAtasTab(){
         const idCompra = a.idCompra || '';
         const tr=document.createElement('tr');
         tr.innerHTML = `
+          <td class=\"checkcol\"><input type=\"checkbox\" class=\"sel\" data-rowid=\"${compra}|${ataNum}\" data-compra=\"${compra}\" data-ata=\"${ataNum}\" data-modalidade=\"${(modNome||'').replace(/\"/g,'\\\"')}\" data-vig=\"${(vigIni||'').split('-').reverse().join('/')} à ${(vigFim||'').split('-').reverse().join('/')}\" data-valor=\"${valor}\"></td>
           <td class="rownum"></td>
           <td><div><strong>${compra}</strong></div>${a.numeroControlePncpCompra? `<div class="small">PNCP: ${a.numeroControlePncpCompra}</div>`:''}</td>
           <td><div>${ataNum}</div>${a.numeroControlePncpAta? `<div class=\"small\">PNCP: ${a.numeroControlePncpAta}</div>`:''}</td>
@@ -87,9 +88,28 @@ function initAtasTab(){
         tbody.appendChild(tr);
       });
       // numerar linhas (Ord)
-      tbody.querySelectorAll('tr').forEach((tr,i)=>{ if(tr.children[0]) tr.children[0].textContent = String(i+1); });
+      tbody.querySelectorAll('tr').forEach((tr,i)=>{ const rn=tr.querySelector('.rownum'); if(rn) rn.textContent = String(i+1); });
       pane.dataset.loaded='1';
       initAtasSort();
+
+      // seleção de atas para tabela secundária
+      const tSel = document.getElementById('tAtasSel');
+      const tSelBody = tSel?.tBodies?.[0];
+      const sumEl = document.getElementById('atasSumTotal');
+      const selAll = document.getElementById('atasSelAll');
+      const btnCopy = document.getElementById('atasBtnCopy');
+      const btnPrint = document.getElementById('atasBtnPrint');
+      const copyMsg = document.getElementById('atasCopyMsg');
+      function recalc(){ const tot=[...tSelBody.querySelectorAll('tr')].reduce((s,tr)=> s+(Number(tr.dataset.valor||0)),0); if(sumEl) sumEl.textContent=fmtBRL(tot); }
+      tbody.addEventListener('change', (e)=>{
+        const cb = e.target && e.target.matches('input.sel') ? e.target : null; if(!cb) return;
+        const d = { rowid: cb.dataset.rowid, compra: cb.dataset.compra, ata: cb.dataset.ata, modalidade: cb.dataset.modalidade, vig: cb.dataset.vig, valor: Number(cb.dataset.valor||0) };
+        if (cb.checked){ cb.closest('tr')?.classList?.add('selrow'); const tr=document.createElement('tr'); tr.dataset.rowid=d.rowid; tr.dataset.valor=String(d.valor||0); tr.innerHTML = `<td>${d.compra}</td><td>${d.ata}</td><td>${d.modalidade}</td><td>${d.vig}</td><td class='right'>${fmtBRL(d.valor||0)}</td><td><button class='btn-mini btnDel' title='Remover'>×</button></td>`; tr.querySelector('.btnDel').addEventListener('click', ()=>{ const c=tbody.querySelector(`input.sel[data-rowid=\"${d.rowid.replace(/"/g,'\\"')}\"]`); if(c){ c.checked=false; c.closest('tr')?.classList?.remove('selrow'); } tr.remove(); recalc(); }); tSelBody.appendChild(tr); recalc(); }
+        else { cb.closest('tr')?.classList?.remove('selrow'); const tr=tSelBody.querySelector(`tr[data-rowid="${d.rowid}"]`); if(tr){ tr.remove(); recalc(); } }
+      });
+      selAll?.addEventListener('change', ()=>{ tbody.querySelectorAll('input.sel').forEach(cb=>{ if(cb.checked!==selAll.checked){ cb.checked=selAll.checked; cb.dispatchEvent(new Event('change',{bubbles:true})); } }); });
+      btnCopy?.addEventListener('click', async ()=>{ const hdr=[...tSel.querySelectorAll('thead th')].map(th=>th.innerText.trim()); const rows=[...tSel.querySelectorAll('tbody tr')]; const totalTxt=sumEl?.innerText?.trim()||'R$ 0,00'; const td=(txt,tag='td',align='left')=>`<${tag} style="border:1px solid #ccc; padding:6px; text-align:${align}; vertical-align:top;">${txt}</${tag}>`; let html=`<meta charset='utf-8'><table style="border-collapse:collapse;border:1px solid #ccc;font:13px Arial"><thead><tr>${hdr.map(h=>td(h,'th')).join('')}</tr></thead><tbody>`; rows.forEach(tr=>{ const tds=tr.querySelectorAll('td'); html+=`<tr>${td(tds[0].innerText)}${td(tds[1].innerText)}${td(tds[2].innerText)}${td(tds[3].innerText)}${td(tds[4].innerText,'td','right')}${td('')}</tr>`; }); html+=`</tbody><tfoot><tr>${td('TOTAL','th','right')}<td colspan='3'></td>${td(totalTxt,'th','right')}<td></td></tr></tfoot></table>`; try{ if(navigator.clipboard && window.ClipboardItem){ const data={'text/html': new Blob([html],{type:'text/html'}),'text/plain': new Blob([html],{type:'text/plain'})}; await navigator.clipboard.write([new ClipboardItem(data)]); copyMsg && (copyMsg.textContent='Tabela copiada.'); } else { const div=document.createElement('div'); div.contentEditable='true'; div.style.position='fixed'; div.style.left='-99999px'; div.innerHTML=html; document.body.appendChild(div); const range=document.createRange(); range.selectNodeContents(div); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); document.execCommand('copy'); document.body.removeChild(div); copyMsg && (copyMsg.textContent='Tabela copiada.'); } }catch(e){ copyMsg && (copyMsg.textContent='Não foi possível copiar.'); } setTimeout(()=>{ if(copyMsg) copyMsg.textContent=''; }, 3500); });
+      btnPrint?.addEventListener('click', ()=>{ const clone=tSel.cloneNode(true); clone.querySelectorAll('td:last-child, th:last-child').forEach(n=>n.remove()); const win=window.open('', '_blank'); if(!win) return; win.document.write(`<html><head><meta charset='utf-8'><title>Atas selecionadas</title><style>table{border-collapse:collapse;width:100%;font:13px Arial} th,td{border:1px solid #ccc;padding:6px;} th{text-align:left;background:#f7f7f7}</style></head><body></body></html>`); win.document.body.appendChild(clone); win.focus(); win.print(); setTimeout(()=>win.close(), 500); });
     })
     .catch(()=>{ tbody.innerHTML = '<tr><td colspan="8">Falha ao carregar atas.</td></tr>'; initAtasSort(); });
 }
@@ -103,6 +123,7 @@ function initItensTab() {
   const tMain = el('#tPrincipal'); if(!tMain) return;
   const tBodyMain = tMain.tBodies[0]; const thead=tMain.tHead;
   const tBodySel = el('#tSel tbody'); const sumEl=el('#sumTotal'); const copyBtn=el('#btnCopy'); const copyMsg=el('#copyMsg'); const selAll=el('#selAll');
+  const printBtn = el('#btnPrint');
   const uasgSpan = el('#uasgCurrent'); const uasgSelect = el('#selUasg'); const loadingMsg = document.getElementById('itensLoading');
 
   function _fmtDateBR(s){ if(!s) return '—'; const d=new Date(s); if(isNaN(d)) return s; const dd=String(d.getUTCDate()).padStart(2,'0'); const mm=String(d.getUTCMonth()+1).padStart(2,'0'); const yy=d.getUTCFullYear(); return `${dd}/${mm}/${yy}`; }
@@ -312,6 +333,9 @@ function initItensTab() {
     }catch(e){ console.error(e); copyMsg && (copyMsg.textContent='Não foi possível copiar a tabela.'); }
     setTimeout(()=>{ if(copyMsg) copyMsg.textContent=''; }, 3500);
   });
+  printBtn?.addEventListener('click', ()=>{
+    const src=el('#tSel'); if(!src) return; const clone=src.cloneNode(true); clone.querySelectorAll('td:last-child, th:last-child').forEach(n=>n.remove()); const win=window.open('', '_blank'); if(!win) return; win.document.write(`<html><head><meta charset='utf-8'><title>Itens selecionados</title><style>table{border-collapse:collapse;width:100%;font:13px Arial} th,td{border:1px solid #ccc;padding:6px;} th{text-align:left;background:#f7f7f7}</style></head><body></body></html>`); win.document.body.appendChild(clone); win.focus(); win.print(); setTimeout(()=>win.close(), 500);
+  });
 
   function loadItens(uasg){
     if (uasgSpan) uasgSpan.textContent = String(uasg||'');
@@ -358,6 +382,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
   contratosLink?.addEventListener('click', ()=> setTimeout(initContratosTab, 0));
   // Acesso direto via hash
   if (location.hash === '#contratos') initContratosTab();
+  // Listar Contratos (contratos sem itens)
+  const contratosListaLink = document.querySelector('a[href="#contratos-listar"]');
+  contratosListaLink?.addEventListener('shown.bs.tab', initContratosListaTab);
+  contratosListaLink?.addEventListener('click', ()=> setTimeout(initContratosListaTab, 0));
+  if (location.hash === '#contratos-listar') initContratosListaTab();
+  // Faz uma carga inicial para evitar problemas de evento
+  initContratosListaTab();
   // Se uma guia estiver ativa por padrão, inicializa imediatamente
   const itensPane = document.getElementById('itens');
   if (itensPane && itensPane.classList.contains('show')) initItensTab();
@@ -392,6 +423,280 @@ function initUGsTab(){
     })
     .catch(()=>{ tbody.innerHTML = '<tr><td colspan="5">Falha ao carregar UGs.</td></tr>'; });
 }
+
+// ===== Listar Contratos (sem itens)
+function initContratosListaTab(){
+  const pane = document.getElementById('contratos-listar');
+  if(!pane || pane.dataset.bound==='1') return;
+  const msg = pane.querySelector('#clMsg');
+  const tbody = pane.querySelector('#clTable tbody');
+  const foot = pane.querySelector('#clFoot');
+  const cFilterWrap = pane.querySelector('#clCompraFilter');
+  const kFilterWrap = pane.querySelector('#clContratoFilter');
+  const txtSearch = pane.querySelector('#clTxtSearch');
+  const btnClearSearch = pane.querySelector('#clBtnClearSearch');
+  const filterCount = pane.querySelector('#clFilterCount');
+  const tSelBody = pane.querySelector('#clSel tbody');
+  const selSum = pane.querySelector('#clSumTotal');
+  const selCopyBtn = pane.querySelector('#clBtnCopy');
+  const selPrintBtn = pane.querySelector('#clBtnPrint');
+  const selCopyMsg = pane.querySelector('#clCopyMsg');
+  const selAll = pane.querySelector('#clSelAll');
+  const toggleObj = pane.querySelector('#clToggleObj');
+  const objetosWrap = pane.querySelector('#clObjetosWrap');
+
+  function fmtDate(iso){ try{ return (iso? new Date(iso).toLocaleDateString('pt-BR') : ''); }catch(e){ return iso||''; } }
+  function fmtDateTime(iso){ try{ if(!iso) return ''; const d=new Date(iso); return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return iso||''; } }
+
+  let allRows = [];
+  let activeCompras = new Set();
+  let activeContratos = new Set();
+  let textQuery = '';
+  const selectedKeys = new Set();
+  let showObjetos = false;
+  let lastRenderedList = [];
+
+  toggleObj?.addEventListener('change', ()=>{ showObjetos = !!toggleObj.checked; renderObjetos(lastRenderedList); });
+
+  function renderRows(list){
+    tbody.innerHTML = '';
+    const rows = list.map((rec)=>{
+      const forn = `${rec.nomeRazaoSocialFornecedor||''}<div class="small text-muted">${rec.niFornecedor||''}</div>`;
+      const vig = `${fmtDate(rec.dataVigenciaInicial)} a ${fmtDate(rec.dataVigenciaFinal)}`;
+      // dias restantes para o fim da vigência
+      let diasRest = '';
+      let rowCls = '';
+      try {
+        if (rec.dataVigenciaFinal) {
+          const hoje = new Date(); hoje.setHours(0,0,0,0);
+          const fim = new Date(rec.dataVigenciaFinal); fim.setHours(0,0,0,0);
+          const diff = Math.ceil((fim - hoje) / 86400000);
+          if (Number.isFinite(diff)) {
+            diasRest = String(diff);
+            if (diff <= 30) rowCls = 'table-danger';
+            else if (diff <= 90) rowCls = 'table-warning';
+          }
+        }
+      } catch(_) { /* ignore */ }
+      const vgl = fmtBRL(rec.valorGlobal||0);
+      const obj = rec.objeto||'';
+      const compra = rec.numeroCompra || '';
+      const modalidade = rec.nomeModalidadeCompra || '';
+      const categoria = rec.nomeCategoria || '';
+      const processo = rec.processo || '';
+      const inc = fmtDateTime(rec.dataHoraInclusao);
+      const exc = fmtDateTime(rec.dataHoraExclusao);
+      const excl = rec.contratoExcluido ? 'Sim' : 'Não';
+      const tcu = rec.niFornecedor ? `<a href=\"api/certidao.php?cnpj=${rec.niFornecedor}\" target=\"_blank\" rel=\"noopener\" title=\"Certidão TCU\"><i class=\"bi bi-book\"></i></a>` : '—';
+      const rowid = `${rec.numeroContrato||''}|${compra}`;
+      return `<tr data-rowid="${rowid}"${rowCls?` class=\"${rowCls}\"`:''}>
+        <td class=\"checkcol\"><input type=\"checkbox\" class=\"sel\" ${selectedKeys.has(rowid)?'checked':''} data-rowid=\"${rowid}\" data-contrato=\"${rec.numeroContrato||''}\" data-compra=\"${compra}\" data-forn=\"${(rec.nomeRazaoSocialFornecedor||'').replace(/\"/g,'\\\"')}\" data-ni=\"${rec.niFornecedor||''}\" data-obj=\"${(obj).replace(/\"/g,'\\\"')}\" data-vig=\"${vig}\" data-vg=\"${rec.valorGlobal||0}\"></td>
+        <td class="rownum"></td>
+        <td>${rec.numeroContrato||''}</td>
+        <td>${compra}</td>
+        <td>${modalidade}</td>
+        <td>${categoria}</td>
+        <td>${forn}</td>
+        <td>${vig}</td>
+        <td class=\"right\">${diasRest}</td>
+        <td class="right">${vgl}</td>
+        <td>${processo}</td>
+        <td>${inc}</td>
+        <td>${exc}</td>
+        <td>${excl}</td>
+        <td class="right">${vgl}</td>
+        <td class="center nowrap">${tcu}</td>
+      </tr>`;
+    }).join('');
+    tbody.innerHTML = rows;
+    // renumerar somente linhas principais
+    let idx=0; tbody.querySelectorAll('tr').forEach((tr)=>{ const cell=tr.querySelector('.rownum'); if(cell){ idx++; cell.textContent=String(idx); } });
+  }
+
+  function renderObjetos(list){
+    if(!objetosWrap) return;
+    if(!showObjetos){ objetosWrap.style.display='none'; objetosWrap.innerHTML=''; return; }
+    objetosWrap.style.display='block';
+    const html = list.map((rec)=>{
+      const obj = (rec.objeto||'').trim(); if(!obj) return '';
+      const num = rec.numeroContrato||'';
+      const forn = rec.nomeRazaoSocialFornecedor||'';
+      return `<div class="border rounded p-2 mb-2"><div class="small text-muted">Contrato: <strong>${num}</strong> — Fornecedor: ${forn||'—'}</div><div>${obj}</div></div>`;
+    }).filter(Boolean).join('');
+    objetosWrap.innerHTML = html || '<div class="small text-muted">Sem objetos para exibir.</div>';
+  }
+
+  function applyFilters(){
+    // de-duplicar por numeroContrato|numeroCompra
+    const seen = new Set();
+    let list = [];
+    allRows.forEach(r=>{ const key = `${r.numeroContrato||''}|${r.numeroCompra||''}`; if(seen.has(key)) return; seen.add(key); list.push(r); });
+    if (activeCompras.size){ list = list.filter(r=> activeCompras.has(String(r.numeroCompra||''))); }
+    if (activeContratos.size){ list = list.filter(r=> activeContratos.has(String(r.numeroContrato||''))); }
+    if (textQuery){ const q = textQuery.toLowerCase(); list = list.filter(r=> String(r.objeto||'').toLowerCase().includes(q) || String(r.nomeRazaoSocialFornecedor||'').toLowerCase().includes(q)); }
+    filterCount && (filterCount.textContent = `(${list.length} de ${allRows.length})`);
+    lastRenderedList = list;
+    renderRows(list);
+    renderObjetos(list);
+  }
+
+  function buildCompraFilter(arr){
+    if (!cFilterWrap) return;
+    const counts = new Map();
+    arr.forEach(r=>{ const key=String(r.numeroCompra||''); if(key) counts.set(key,(counts.get(key)||0)+1); });
+    const keys = Array.from(counts.keys()).sort((a,b)=>{ const na=parseInt(a,10)||0, nb=parseInt(b,10)||0; if(na!==nb) return na-nb; return String(a).localeCompare(String(b)); });
+    let html = '<span class="group-title">Filtrar por Compra:</span>';
+    keys.forEach(k=>{ const c=counts.get(k)||0; const id='clc_'+k.replace(/\W+/g,'_'); html += `<label for="${id}"><input type="checkbox" class="clcompra-chk" id="${id}" data-key="${k}"><span>${k}</span> <span class="small">(${c})</span></label>`; });
+    html += `<span class="actions small">| <span class="link" id="clCClr">limpar</span></span>`;
+    cFilterWrap.innerHTML = html;
+    cFilterWrap.addEventListener('change', (e)=>{ const cb=e.target && e.target.matches('input.clcompra-chk')? e.target:null; if(!cb)return; const key=cb.dataset.key||''; if(!key)return; if(cb.checked) activeCompras.add(key); else activeCompras.delete(key); applyFilters(); });
+    cFilterWrap.querySelector('#clCClr')?.addEventListener('click', ()=>{ activeCompras.clear(); cFilterWrap.querySelectorAll('input.clcompra-chk').forEach(i=> i.checked=false); applyFilters(); });
+  }
+
+  function buildContratoFilter(arr){
+    if (!kFilterWrap) return;
+    const counts = new Map();
+    arr.forEach(r=>{ const key=String(r.numeroContrato||''); if(key) counts.set(key,(counts.get(key)||0)+1); });
+    const keys = Array.from(counts.keys()).sort();
+    let html = '<span class="group-title">Filtrar por Contrato:</span>';
+    keys.forEach(k=>{ const c=counts.get(k)||0; const id='clk_'+k.replace(/\W+/g,'_'); html += `<label for="${id}"><input type="checkbox" class="clcontrato-chk" id="${id}" data-key="${k}"><span>${k}</span> <span class="small">(${c})</span></label>`; });
+    html += `<span class="actions small">| <span class="link" id="clKClr">limpar</span></span>`;
+    kFilterWrap.innerHTML = html;
+    kFilterWrap.addEventListener('change', (e)=>{ const cb=e.target && e.target.matches('input.clcontrato-chk')? e.target:null; if(!cb)return; const key=cb.dataset.key||''; if(!key)return; if(cb.checked) activeContratos.add(key); else activeContratos.delete(key); applyFilters(); });
+    kFilterWrap.querySelector('#clKClr')?.addEventListener('click', ()=>{ activeContratos.clear(); kFilterWrap.querySelectorAll('input.clcontrato-chk').forEach(i=> i.checked=false); applyFilters(); });
+  }
+
+  txtSearch?.addEventListener('input', ()=>{ textQuery = txtSearch.value||''; applyFilters(); });
+  btnClearSearch?.addEventListener('click', ()=>{ if(txtSearch){ txtSearch.value=''; textQuery=''; applyFilters(); } });
+
+  function recalcSelTotal(){ const tot=[...tSelBody?.querySelectorAll('tr')||[]].reduce((s,tr)=> s + (Number(tr.dataset.vg||0)), 0); if(selSum) selSum.textContent = fmtBRL(tot); }
+  function addSelRow(d){ if(!tSelBody || tSelBody.querySelector(`tr[data-rowid="${CSS.escape(d.rowid)}"]`)) return; const tr=document.createElement('tr'); tr.dataset.rowid=d.rowid; tr.dataset.vg=String(d.vg||0); tr.innerHTML=`
+      <td>${d.contrato||'—'}</td>
+      <td>${d.compra||'—'}</td>
+      <td class="left">${d.forn||''}${d.ni? `<div class="small">CNPJ: ${maskCNPJ(d.ni)}</div>`:''}</td>
+      <td class="left">${d.obj||''}</td>
+      <td>${d.vig||''}</td>
+      <td class="right">${fmtBRL(d.vg||0)}</td>
+      <td><button class="btn-mini btnDel" title="Remover">×</button></td>`;
+    tr.querySelector('.btnDel').addEventListener('click', ()=>{ const cb=tbody.querySelector(`input.sel[data-rowid="${CSS.escape(d.rowid)}"]`); if(cb){ cb.checked=false; cb.closest('tr')?.classList?.remove('selrow'); selectedKeys.delete(d.rowid);} tr.remove(); recalcSelTotal(); });
+    tSelBody.appendChild(tr); recalcSelTotal(); }
+  function removeSelRow(rowid){ const tr=tSelBody?.querySelector(`tr[data-rowid="${CSS.escape(rowid)}"]`); if(tr){ tr.remove(); recalcSelTotal(); } }
+
+  // seleção
+  tbody.addEventListener('change', (e)=>{
+    const cb = e.target && e.target.matches('input.sel') ? e.target : null; if(!cb) return;
+    const d = { rowid: cb.dataset.rowid, contrato: cb.dataset.contrato, compra: cb.dataset.compra, forn: cb.dataset.forn, ni: cb.dataset.ni, obj: cb.dataset.obj, vig: cb.dataset.vig, vg: Number(cb.dataset.vg||0) };
+    if (cb.checked){ cb.closest('tr')?.classList?.add('selrow'); selectedKeys.add(d.rowid); addSelRow(d); }
+    else { cb.closest('tr')?.classList?.remove('selrow'); selectedKeys.delete(d.rowid); removeSelRow(d.rowid); }
+  });
+  selAll?.addEventListener('change', ()=>{ tbody.querySelectorAll('input.sel').forEach(cb=>{ if(cb.checked!==selAll.checked){ cb.checked=selAll.checked; cb.dispatchEvent(new Event('change',{bubbles:true})); } }); });
+
+  function recalcSelTotal(){ const tot=[...tSelBody?.querySelectorAll('tr')||[]].reduce((s,tr)=> s + (Number(tr.dataset.vg||0)), 0); if(selSum) selSum.textContent = fmtBRL(tot); }
+  function addSelRow(d){ if(!tSelBody || tSelBody.querySelector(`tr[data-rowid="${CSS.escape(d.rowid)}"]`)) return; const tr=document.createElement('tr'); tr.dataset.rowid=d.rowid; tr.dataset.vg=String(d.vg||0); tr.innerHTML=`
+      <td>${d.contrato||'—'}</td>
+      <td>${d.compra||'—'}</td>
+      <td class="left">${d.forn||''}${d.ni? `<div class="small">CNPJ: ${maskCNPJ(d.ni)}</div>`:''}</td>
+      <td class="left">${d.obj||''}</td>
+      <td>${d.vig||''}</td>
+      <td class="right">${fmtBRL(d.vg||0)}</td>
+      <td><button class="btn-mini btnDel" title="Remover">×</button></td>`;
+    tr.querySelector('.btnDel').addEventListener('click', ()=>{ const cb=tbody.querySelector(`input.sel[data-rowid="${CSS.escape(d.rowid)}"]`); if(cb){ cb.checked=false; cb.closest('tr')?.classList?.remove('selrow'); } tr.remove(); recalcSelTotal(); });
+    tSelBody.appendChild(tr); recalcSelTotal(); }
+  function removeSelRow(rowid){ const tr=tSelBody?.querySelector(`tr[data-rowid="${CSS.escape(rowid)}"]`); if(tr){ tr.remove(); recalcSelTotal(); } }
+
+  // seleção
+  tbody.addEventListener('change', (e)=>{
+    const cb = e.target && e.target.matches('input.sel') ? e.target : null; if(!cb) return;
+    const d = { rowid: cb.dataset.rowid, contrato: cb.dataset.contrato, compra: cb.dataset.compra, forn: cb.dataset.forn, ni: cb.dataset.ni, obj: cb.dataset.obj, vig: cb.dataset.vig, vg: Number(cb.dataset.vg||0) };
+    if (cb.checked){ cb.closest('tr')?.classList?.add('selrow'); addSelRow(d); }
+    else { cb.closest('tr')?.classList?.remove('selrow'); removeSelRow(d.rowid); }
+  });
+  selAll?.addEventListener('change', ()=>{ tbody.querySelectorAll('input.sel').forEach(cb=>{ if(cb.checked!==selAll.checked){ cb.checked=selAll.checked; cb.dispatchEvent(new Event('change',{bubbles:true})); } }); });
+
+  selCopyBtn?.addEventListener('click', async ()=>{
+    const src=pane.querySelector('#clSel'); if(!src) return;
+    const hdr=[...src.querySelectorAll('thead th')].map(th=>th.innerText.trim());
+    const rows=[...src.querySelectorAll('tbody tr')];
+    const totalTxt = pane.querySelector('#clSumTotal')?.innerText?.trim() || 'R$ 0,00';
+    const td=(txt,tag='td',align='left')=>`<${tag} style="border:1px solid #ccc; padding:6px; text-align:${align}; vertical-align:top;">${txt}</${tag}>`;
+    let html = `<meta charset="utf-8"><table style="border-collapse:collapse; border:1px solid #ccc; font-family:Arial,Helvetica,sans-serif; font-size:13px;"><thead><tr>${hdr.map(h=>td(h,'th')).join('')}</tr></thead><tbody>`;
+    rows.forEach(tr=>{ const tds=tr.querySelectorAll('td'); html += `<tr>${td(tds[0].innerText)}${td(tds[1].innerText)}${td(tds[2].innerHTML)}${td(tds[3].innerText)}${td(tds[4].innerText)}${td(tds[5].innerText,'td','right')}${td('')}</tr>`; });
+    html += `</tbody><tfoot><tr>${td('TOTAL','th','right')}<td colspan="4"></td>${td(totalTxt,'th','right')}<td></td></tr></tfoot></table>`;
+    try{
+      if(navigator.clipboard && window.ClipboardItem){ const data={'text/html': new Blob([html],{type:'text/html'}),'text/plain': new Blob([html],{type:'text/plain'})}; await navigator.clipboard.write([new ClipboardItem(data)]); selCopyMsg && (selCopyMsg.textContent='Tabela copiada.'); }
+      else { const div=document.createElement('div'); div.contentEditable='true'; div.style.position='fixed'; div.style.left='-99999px'; div.innerHTML=html; document.body.appendChild(div); const range=document.createRange(); range.selectNodeContents(div); const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range); document.execCommand('copy'); document.body.removeChild(div); selCopyMsg && (selCopyMsg.textContent='Tabela copiada.'); }
+    }catch(e){ selCopyMsg && (selCopyMsg.textContent='Não foi possível copiar.'); }
+    setTimeout(()=>{ if(selCopyMsg) selCopyMsg.textContent=''; }, 3500);
+  });
+  selPrintBtn?.addEventListener('click', ()=>{
+    const src=pane.querySelector('#clSel'); if(!src) return; const clone=src.cloneNode(true); clone.querySelectorAll('td:last-child, th:last-child').forEach(n=>n.remove()); const win=window.open('', '_blank'); if(!win) return; win.document.write(`<html><head><meta charset='utf-8'><title>Contratos selecionados</title><style>table{border-collapse:collapse;width:100%;font:13px Arial} th,td{border:1px solid #ccc;padding:6px;} th{text-align:left;background:#f7f7f7}</style></head><body></body></html>`); win.document.body.appendChild(clone); win.focus(); win.print(); setTimeout(()=>win.close(), 500);
+  });
+
+  async function load(){
+    if (pane.dataset.loading==='1') return; pane.dataset.loading='1';
+    msg && (msg.textContent='Carregando contratos...');
+    tbody && (tbody.innerHTML='');
+    try{
+      const r = await fetch('api/contratos_listar.php');
+      const j = await r.json();
+      if (j.error){ msg && (msg.textContent = 'Falha ao consultar.'); return; }
+      const arr = j.resultado || [];
+      if(!arr.length){ tbody.innerHTML = '<tr><td colspan="16">Nenhum contrato encontrado.</td></tr>'; msg && (msg.textContent=''); return; }
+      allRows = arr.slice();
+      buildCompraFilter(allRows);
+      buildContratoFilter(allRows);
+      applyFilters();
+      msg && (msg.textContent = `Carregados ${allRows.length} contrato(s).`);
+      const f = j.filtros || {};
+      const fmtBR = (s)=> s? s.split('-').reverse().join('/') : '';
+      foot && (foot.textContent = `Período: ${fmtBR(f.dataVigenciaInicialMin)} a ${fmtBR(f.dataVigenciaInicialMax)}`);
+    }catch(e){ console.error(e); tbody.innerHTML = '<tr><td colspan="16">Erro ao consultar.</td></tr>'; msg && (msg.textContent='Falha ao carregar.'); }
+    finally{ delete pane.dataset.loading; }
+  }
+
+  pane.dataset.bound='1';
+  load();
+  setTimeout(()=>{ window.initContratosListaSort && window.initContratosListaSort(); }, 0);
+}
+
+// Ordenação para Listar Contratos
+(function(){
+  function parseMoneyBR(txt){ return Number(String(txt||'').replace(/[^0-9,-]/g,'').replace(/\./g,'').replace(',','.'))||0; }
+  function keyForCell(td, type){
+    const raw = (td?.innerText||'').trim();
+    switch(type){
+      case 'rownum': return parseInt(raw.replace(/\D+/g,''),10)||0;
+      case 'money': return parseMoneyBR(raw);
+      case 'date': {
+        const m=raw.match(/(\d{2})\/(\d{2})\/(\d{4})/); if(!m) return raw.toLowerCase();
+        return new Date(`${m[3]}-${m[2]}-${m[1]}T00:00:00`).getTime();
+      }
+      case 'numero': return parseInt(raw.replace(/\D+/g,''),10)||0;
+      default: return raw.toLowerCase();
+    }
+  }
+  window.initContratosListaSort = function(){
+    const table = document.querySelector('#clTable'); if(!table || table.dataset.sortReady==='1') return; table.dataset.sortReady='1';
+    const thead=table.tHead, tbody=table.tBodies[0]; if(!thead||!tbody) return;
+    function clearIcons(){ thead.querySelectorAll('.sort-ind').forEach(s=>s.textContent=''); }
+    function setIcon(th,dir){ let ind=th.querySelector('.sort-ind'); if(!ind){ ind=document.createElement('span'); ind.className='sort-ind'; th.appendChild(ind);} ind.textContent=(dir===1?'▲':'▼'); }
+    let lastTh=null, lastDir=1;
+    thead.addEventListener('click', (e)=>{
+      const th=e.target.closest('th'); if(!th) return;
+      const idx=[...th.parentNode.children].indexOf(th);
+      const type=th.dataset.sort||'text';
+      const rows=[...tbody.querySelectorAll('tr')];
+      const keyed=rows.map(tr=>({tr,key:keyForCell(tr.children[idx],type)}));
+      const dir=(lastTh===th && lastDir===1)? -1 : 1;
+      keyed.sort((A,B)=> (A.key<B.key?-1:(A.key>B.key?1:0)) * dir);
+      const frag=document.createDocumentFragment(); keyed.forEach(k=>frag.appendChild(k.tr));
+      tbody.appendChild(frag);
+      // renumerar col Ord apenas nas linhas principais
+      let idx=0; tbody.querySelectorAll('tr').forEach((tr)=>{ const cell=tr.querySelector('.rownum'); if(cell){ idx++; cell.textContent=String(idx); } });
+      lastTh=th; lastDir=dir; clearIcons(); setIcon(th,dir);
+    });
+  }
+})();
 
 function initUGsSort(){
   const t = document.getElementById('tUGs');
@@ -438,6 +743,7 @@ function initContratosTab(){
   const filterCount = pane.querySelector('#cFilterCount');
   const selAll = pane.querySelector('#cSelAll');
   const copyBtn = pane.querySelector('#cBtnCopy');
+  const printBtn = pane.querySelector('#cBtnPrint');
   const copyMsg = pane.querySelector('#cCopyMsg');
   if(!tBodyMain || !tBodySel) return;
 
@@ -594,6 +900,9 @@ function initContratosTab(){
       }
     }catch(e){ console.error(e); copyMsg && (copyMsg.textContent='Não foi possível copiar a tabela.'); }
     setTimeout(()=>{ if(copyMsg) copyMsg.textContent=''; }, 3500);
+  });
+  printBtn?.addEventListener('click', ()=>{
+    const src=pane.querySelector('#cSel'); if(!src) return; const clone=src.cloneNode(true); clone.querySelectorAll('td:last-child, th:last-child').forEach(n=>n.remove()); const win=window.open('', '_blank'); if(!win) return; win.document.write(`<html><head><meta charset='utf-8'><title>Itens selecionados</title><style>table{border-collapse:collapse;width:100%;font:13px Arial} th,td{border:1px solid #ccc;padding:6px;} th{text-align:left;background:#f7f7f7}</style></head><body></body></html>`); win.document.body.appendChild(clone); win.focus(); win.print(); setTimeout(()=>win.close(), 500);
   });
 
   async function load(){

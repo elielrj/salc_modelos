@@ -45,6 +45,7 @@
 <h4 class="mt-4 mb-2">Itens selecionados</h4>
 <div class="mb-2">
   <button class="btn-mini" id="cBtnCopy">Copiar tabela</button>
+  <button class="btn-mini" id="cBtnPrint">Imprimir PDF</button>
   <span class="small" id="cCopyMsg" style="margin-left:8px;"></span>
 </div>
 <table id="cSel" class="table table-sm">

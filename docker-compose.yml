@@ -1,8 +1,24 @@
 services:
   web:
-    image: php:7.4.33-apache #php:5.6.12-apache #php:7.4.33-apache php:8.3-apache
+    image: php:8.3-apache
     container_name: salc-modelos
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - .:/var/www/html
+    environment:
+      - TZ=America/Sao_Paulo
+
+    # ===== LIMITES DE RECURSOS =====
+    mem_limit: 512m        # RAM máxima do container
+    memswap_limit: 512m    # bloqueia uso de swap (igual ao mem_limit)
+    cpus: 1.50             # até 1,5 vCPU
+    cpu_shares: 1024       # peso de CPU (p/ disputa com outros containers)
+    cpuset: "0-2"          # fixa nos cores 0,1,2 (deixe 1 core livre p/ SO)
+
+    # (opcional) limites de ulimit
+    ulimits:
+      nproc: 4096
+      nofile:
+        soft: 8192
+        hard: 8192

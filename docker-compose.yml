@@ -8,6 +8,7 @@ services:
       - .:/var/www/html
     environment:
       - TZ=America/Sao_Paulo
+    restart: always
 
     # ===== LIMITES DE RECURSOS =====
     mem_limit: 512m        # RAM máxima do container

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ARPItensClient.php';
 require_once __DIR__ . '/../app/models/Item.php';
@@ -11,7 +12,7 @@ try {
     $vigMin = (clone $today)->modify('-365 days')->format('Y-m-d');
     $vigMax = (clone $today)->modify('+365 days')->format('Y-m-d');
 
-    $uasg = (int)(isset($_GET['uasg']) ? $_GET['uasg'] : UASG);
+    $uasg = (int)($_GET['uasg'] ?? UASG);
     $paramsBase = [
         'tamanhoPagina' => 50,
         'codigoUnidadeGerenciadora' => $uasg,
@@ -29,16 +30,16 @@ try {
             echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null)]);
             exit;
         }
-        $lote = isset($resp['resultado']) ? $resp['resultado'] : [];
+        $lote = $resp['resultado'] ?? [];
         if (!is_array($lote) || !count($lote)) break;
         foreach ($lote as $rec) {
-            $k = (isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '') . '|' . (isset($rec['anoCompra']) ? $rec['anoCompra'] : '') . '|' . (isset($rec['numeroItem']) ? $rec['numeroItem'] : '');
+            $k = ($rec['numeroCompra'] ?? '') . '|' . ($rec['anoCompra'] ?? '') . '|' . ($rec['numeroItem'] ?? '');
             if (!isset($seen[$k])) {
                 $lista[] = Item::fromApi($rec);
                 $seen[$k] = true;
             }
         }
-        $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
+        $rest = $resp['paginasRestantes'] ?? null;
         if ($rest !== null && (int)$rest <= 0) break;
         $p++; if ($p > 2000) break;
         if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);

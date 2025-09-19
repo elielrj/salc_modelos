@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ContratosClient.php';
 
@@ -31,22 +32,22 @@ try {
                 echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null), 'params' => $params]);
                 exit;
             }
-            $lote = isset($resp['resultado']) ? $resp['resultado'] : [];
+            $lote = $resp['resultado'] ?? [];
             if (!is_array($lote) || !count($lote)) break;
             foreach ($lote as $rec) {
                 $key = (
-                    (isset($rec['numeroContrato']) ? $rec['numeroContrato'] : '') . '|' .
-                    (isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '') . '|' .
-                    (isset($rec['anoCompra']) ? $rec['anoCompra'] : '') . '|' .
-                    (isset($rec['numeroItem']) ? $rec['numeroItem'] : '') . '|' .
-                    (isset($rec['niFornecedor']) ? $rec['niFornecedor'] : '') . '|' .
-                    (isset($rec['valorUnitarioItem']) ? $rec['valorUnitarioItem'] : '')
+                    ($rec['numeroContrato'] ?? '') . '|' .
+                    ($rec['numeroCompra'] ?? '') . '|' .
+                    ($rec['anoCompra'] ?? '') . '|' .
+                    ($rec['numeroItem'] ?? '') . '|' .
+                    ($rec['niFornecedor'] ?? '') . '|' .
+                    ($rec['valorUnitarioItem'] ?? '')
                 );
                 if (isset($uniq[$key])) continue;
                 $uniq[$key] = 1;
                 $lista[] = $rec;
             }
-            $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
+            $rest = $resp['paginasRestantes'] ?? null;
             if ($rest !== null && (int)$rest <= 0) break;
             $p++; if ($p > 2000) break;
             if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);

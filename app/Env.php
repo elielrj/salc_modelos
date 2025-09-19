@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 class Env
 {
-    private static $vars = [];
+    private static array $vars = [];
 
-    public static function load($path)
+    public static function load(string $path): void
     {
         if (!is_file($path)) return;
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
@@ -19,7 +21,7 @@ class Env
         }
     }
 
-    public static function get($key, $default = null)
+    public static function get(string $key, mixed $default = null): mixed
     {
         return array_key_exists($key, self::$vars) ? self::$vars[$key] : $default;
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 // Polyfills for PHP 7.4 compatibility
 // Only define if the native functions are not available
 
@@ -33,4 +34,3 @@ if (!function_exists('str_contains')) {
         return strpos($haystack, $needle) !== false;
     }
 }
-

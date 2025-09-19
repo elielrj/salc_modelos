@@ -1,7 +1,12 @@
 <?php
+declare(strict_types=1);
+
 class HttpClient
 {
-    public static function getJsonWithRetry($fullUrl, $useCache = true, $cacheTtlSec = 600, $maxRetries = 6, $baseBackoff = 1.0)
+    /**
+     * @return array<string,mixed>
+     */
+    public static function getJsonWithRetry(string $fullUrl, bool $useCache = true, int $cacheTtlSec = 600, int $maxRetries = 6, float $baseBackoff = 1.0): array
     {
         $cacheKey = sys_get_temp_dir() . '/arp_cache_' . sha1($fullUrl) . '.json';
         if ($useCache && is_file($cacheKey) && (time() - filemtime($cacheKey) <= $cacheTtlSec)) {

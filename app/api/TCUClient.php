@@ -1,7 +1,12 @@
 <?php
+declare(strict_types=1);
+
 class TCUClient
 {
-    public static function getCertidaoPdf($cnpj)
+    /**
+     * @return string|array<string,mixed>
+     */
+    public static function getCertidaoPdf(string $cnpj): string|array
     {
         $cnpj = preg_replace('/\D+/', '', (string)$cnpj);
         if (strlen($cnpj) !== 14) return ['__error' => 'CNPJ inválido'];

@@ -5,7 +5,7 @@ Central de trabalho para a SALC que reúne modelos de documentos e ferramentas p
 A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e expõe endpoints internos que consomem Dados Abertos do Compras.gov.br e serviços do TCU.
 
 ## Visão Geral
-- UI em abas com foco em tarefas da SALC: UGs, Pregão, Carona, Dispensa, Requisitórias, Termo de Referência, Itens de Pregão, Atas, Contratos (itens) e Listar Contratos (resumo), além do SPED 3.0.
+- UI em abas com foco em tarefas da SALC: UGs, Pregão, Carona, Itens de Pregão Carona, Dispensa, Requisitórias, Termo de Referência, Itens de Pregão, Atas, Contratos (itens) e Listar Contratos (resumo), além do SPED 3.0.
 - Consumo de Dados Abertos com cache local e retry/backoff para robustez contra rate limit e instabilidade.
 - Seleção de linhas e somatórios para facilitar consolidação (copiar/colar em planilhas ou imprimir PDF das seleções).
 - Filtros por Compra/Ano, busca textual (descrição/fornecedor), ordenação de colunas e indicadores de situação SICAF.
@@ -18,6 +18,10 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
   - Central de links para DFD, ETP, Matriz de Riscos, Relatório de Preço e Mapa Comparativo.
 - Carona
   - Links para modelos (Capa, Índice, Checklist, Abertura, Encerramento) e documentos do Demandante.
+- Itens de Pregão Carona
+  - Consolida itens de ARP para todas as UASGs do CSV (exceto 160517), sem duplicação por UG/compra/item.
+  - Selecione as UASGs desejadas no multiselect — cada marcação carrega e acrescenta os itens correspondentes.
+  - Filtros por tipo do item (Material/Serviço), Pregão (combobox), busca textual, botão “Limpar consulta”, seleção com totalizador e ações de copiar/imprimir, exibindo o status a cada carga.
 - Dispensa
   - Links para modelos de Requisitória/Termo específicos.
 - Requisitórias
@@ -46,7 +50,10 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
 - `api/itens.php`
   - Chama `dadosabertos.compras.gov.br/modulo-arp/2_consultarARPItem` via `ARPItensClient`.
   - Janela padrão: vigência de -365 a +365 dias; deduplica por compra/ano/item; mapeia campos via `app/models/Item.php`.
-  - Parâmetros: `uasg` (opcional, padrão em `.env`).
+  - Parâmetros: `uasg` (opcional, padrão em `.env`), `tipo` (`material` | `servico`).
+- `api/itens_carona.php`
+  - (Opcional) disponibiliza agregação no backend chamando todas as UASGs do CSV (exceto 160517), com deduplicação por UG/compra/item.
+  - Retorna metadados da vigência, relação de UASGs consultadas, contador de consultas e possíveis falhas — a interface utiliza a mesma lógica no frontend para acompanhar o progresso em tempo real.
 - `api/atas.php`
   - Tenta múltiplos endpoints do módulo ARP (Atas) via `ARPAtaClient` para maior compatibilidade.
   - Janela padrão: vigência de -365 a +365 dias; deduplicação por chaves de compra/ata/id.
@@ -60,7 +67,7 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
 ## Robustez de Rede
 - Cliente HTTP com cache em `/tmp` e retries exponenciais com jitter.
 - Respeita `Retry-After` e mensagens “Try again in N seconds” quando presentes.
-- Opções tunáveis por `.env`: `CACHE_TTL`, `REQUEST_DELAY_MS`, `MAX_RETRIES`, `BASE_BACKOFF`.
+- Opções tunáveis por `.env`: `CACHE_TTL`, `MAX_RETRIES`, `BASE_BACKOFF`.
 
 ## Estrutura do Projeto
 - Interface
@@ -68,6 +75,7 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
   - `views/`: componentes por aba (tabelas, filtros, botões de copiar/imprimir).
   - `assets/css/app.css`: estilos para tabelas, filtros e responsividade.
   - `assets/js/app.js`: carregamento dos dados (fetch APIs), ordenação, filtros, seleção, totalizadores, impressão.
+  - `assets/js/itens_carona.js`: módulo específico da aba Itens de Pregão Carona.
 - Backend
   - `api/`: endpoints REST em PHP que agregam e saneiam dados.
   - `app/api/`: clientes HTTP para Dados Abertos (ARP/Atas/Itens/Contratos) e TCU.
@@ -84,7 +92,6 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
   - `UASG` (padrão `160517`)
   - `TIMEZONE` (padrão `America/Sao_Paulo`)
   - `CACHE_TTL` (segundos, padrão `600`)
-  - `REQUEST_DELAY_MS` (milissegundos entre páginas, padrão `200`)
   - `MAX_RETRIES` (padrão `6`)
   - `BASE_BACKOFF` (padrão `1.0`)
 - Subir via Docker
@@ -99,7 +106,7 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
 
 ## Observações
 - Não há persistência de banco de dados; o cache é temporário em arquivo.
-- As consultas de contratos percorrem janelas anuais de 2012 ao ano atual — podem levar tempo e respeitam espera aleatória entre janelas para mitigar rate limit.
+- As consultas de contratos percorrem janelas anuais de 2012 ao ano atual — podem levar tempo em função do volume de dados e limites das APIs públicas.
 - As ações de “Copiar” usam o clipboard do navegador; a de “Imprimir” gera visualização adequada para PDF.
 
 ---
@@ -112,9 +119,11 @@ Se quiser, posso adaptar o README com screenshots, GIFs de uso ou instruções e
    - Ordenação clicando nos cabeçalhos das colunas.
    - Seleção de linhas e definição de “Qtde a comprar”; o totalizador é atualizado automaticamente.
    - Botões “Copiar” (cola em planilhas) e “Imprimir” (gera PDF do navegador).
-3) Em “Lista de Atas”, use a seleção de atas para montar um consolidado e exportar por copiar/imprimir.
-4) Em “Contratos — Itens” e “Listar Contratos”, aplique filtros, busque por texto, selecione linhas e exporte.
-5) Clique no ícone do livro na coluna do fornecedor para abrir a Certidão TCU (PDF) pelo CNPJ.
+3) Em “Carona”, utilize os modelos de documentos já prontos.
+4) Em “Itens de Pregão Carona”, selecione uma ou mais UASGs no multiselect (Ctrl/Cmd + clique) para carregar os itens sob demanda, aplique os filtros por tipo (Material/Serviço), pregão, busca textual e utilize seleção/cópia/impressão como nas demais abas.
+5) Em “Lista de Atas”, use a seleção de atas para montar um consolidado e exportar por copiar/imprimir.
+6) Em “Contratos — Itens” e “Listar Contratos”, aplique filtros, busque por texto, selecione linhas e exporte.
+7) Clique no ícone do livro na coluna do fornecedor para abrir a Certidão TCU (PDF) pelo CNPJ.
 
 ## Capturas de Tela
 Adicione imagens nas rotas abaixo para que apareçam neste README (os links já estão prontos):

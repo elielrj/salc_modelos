@@ -50,10 +50,7 @@ try {
             $rest = $resp['paginasRestantes'] ?? null;
             if ($rest !== null && (int)$rest <= 0) break;
             $p++; if ($p > 2000) break;
-            if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);
         }
-        // Espera entre janelas (1 a 5s)
-        usleep(mt_rand(1000, 5000) * 1000);
     }
 
     echo json_encode([

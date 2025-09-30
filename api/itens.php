@@ -13,12 +13,17 @@ try {
     $vigMax = (clone $today)->modify('+365 days')->format('Y-m-d');
 
     $uasg = (int)($_GET['uasg'] ?? UASG);
+    $tipoFiltro = strtolower(trim((string)($_GET['tipo'] ?? '')));
+    $tipoAllow = ['material' => 'MATERIAL', 'servico' => 'SERVIÇO'];
     $paramsBase = [
         'tamanhoPagina' => 50,
         'codigoUnidadeGerenciadora' => $uasg,
         'dataVigenciaInicialMin' => $vigMin,
         'dataVigenciaInicialMax' => $vigMax,
     ];
+    if ($tipoFiltro && isset($tipoAllow[$tipoFiltro])) {
+        $paramsBase['tipoItem'] = $tipoAllow[$tipoFiltro];
+    }
 
     $lista = [];
     $seen = [];
@@ -42,9 +47,14 @@ try {
         $rest = $resp['paginasRestantes'] ?? null;
         if ($rest !== null && (int)$rest <= 0) break;
         $p++; if ($p > 2000) break;
-        if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);
     }
-    echo json_encode(['uasg' => $uasg, 'vigencia' => [$vigMin, $vigMax], 'total' => count($lista), 'itens' => $lista]);
+    echo json_encode([
+        'uasg' => $uasg,
+        'vigencia' => [$vigMin, $vigMax],
+        'total' => count($lista),
+        'itens' => $lista,
+        'params' => $paramsBase,
+    ]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'internal', 'message' => $e->getMessage()]);

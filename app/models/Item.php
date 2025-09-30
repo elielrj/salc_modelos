@@ -26,6 +26,9 @@ class Item
             'tipoItem' => $it['tipoItem'] ?? '',
             'situacaoSicaf' => $it['situacaoSicaf'] ?? null,
             'quantidadeEmpenhada' => (float)($it['quantidadeEmpenhada'] ?? 0),
+            'codigoUnidadeGerenciadora' => $it['codigoUnidadeGerenciadora'] ?? ($it['codigoUnidadeGestora'] ?? null),
+            'nomeUnidadeGerenciadora' => $it['nomeUnidadeGerenciadora'] ?? ($it['nomeUnidadeGestora'] ?? null),
+            'siglaUnidadeGerenciadora' => $it['siglaUnidadeGerenciadora'] ?? ($it['siglaUnidadeGestora'] ?? null),
         ];
     }
 }

@@ -41,6 +41,7 @@ if (isset($_GET['certidao'])) {
                     Referência</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
             </li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens-carona" role="tab">Itens de Pregão Carona</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos" role="tab">Itens Contrato</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos-listar" role="tab">Listar Contratos</a></li>
@@ -53,6 +54,9 @@ if (isset($_GET['certidao'])) {
             </div>
             <div class="tab-pane fade" id="carona" role="tabpanel">
                 <?php include __DIR__ . '/views/carona.php'; ?>
+            </div>
+            <div class="tab-pane fade" id="itens-carona" role="tabpanel">
+                <?php include __DIR__ . '/views/itens_carona.php'; ?>
             </div>
             <div class="tab-pane fade" id="dispensa" role="tabpanel">
                 <?php include __DIR__ . '/views/dispensa.php'; ?>
@@ -87,6 +91,7 @@ if (isset($_GET['certidao'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
     </script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/js/itens_carona.js"></script>
 </body>
 
 </html>

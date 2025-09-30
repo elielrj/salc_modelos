@@ -42,7 +42,6 @@ try {
         $rest = $resp['paginasRestantes'] ?? null;
         if ($rest !== null && (int)$rest <= 0) break;
         $p++; if ($p > 2000) break;
-        if (REQUEST_DELAY_MS > 0) usleep(REQUEST_DELAY_MS * 1000);
     }
     echo json_encode(['uasg' => $uasg, 'vigencia' => [$vigMin, $vigMax], 'total' => count($lista), 'atas' => $lista]);
 } catch (Exception $e) {

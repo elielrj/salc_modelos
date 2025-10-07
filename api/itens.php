@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ARPItensClient.php';
 require_once __DIR__ . '/../app/models/Item.php';
@@ -12,8 +11,8 @@ try {
     $vigMin = (clone $today)->modify('-365 days')->format('Y-m-d');
     $vigMax = (clone $today)->modify('+365 days')->format('Y-m-d');
 
-    $uasg = (int)($_GET['uasg'] ?? UASG);
-    $tipoFiltro = strtolower(trim((string)($_GET['tipo'] ?? '')));
+    $uasg = isset($_GET['uasg']) ? (int) $_GET['uasg'] : (int) UASG;
+    $tipoFiltro = strtolower(trim((string) (isset($_GET['tipo']) ? $_GET['tipo'] : '')));
     $tipoAllow = ['material' => 'MATERIAL', 'servico' => 'SERVIÇO'];
     $paramsBase = [
         'tamanhoPagina' => 50,
@@ -35,16 +34,19 @@ try {
             echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null)]);
             exit;
         }
-        $lote = $resp['resultado'] ?? [];
+        $lote = isset($resp['resultado']) ? $resp['resultado'] : array();
         if (!is_array($lote) || !count($lote)) break;
         foreach ($lote as $rec) {
-            $k = ($rec['numeroCompra'] ?? '') . '|' . ($rec['anoCompra'] ?? '') . '|' . ($rec['numeroItem'] ?? '');
+            $numeroCompra = isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '';
+            $anoCompra = isset($rec['anoCompra']) ? $rec['anoCompra'] : '';
+            $numeroItem = isset($rec['numeroItem']) ? $rec['numeroItem'] : '';
+            $k = $numeroCompra . '|' . $anoCompra . '|' . $numeroItem;
             if (!isset($seen[$k])) {
                 $lista[] = Item::fromApi($rec);
                 $seen[$k] = true;
             }
         }
-        $rest = $resp['paginasRestantes'] ?? null;
+        $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
         if ($rest !== null && (int)$rest <= 0) break;
         $p++; if ($p > 2000) break;
     }

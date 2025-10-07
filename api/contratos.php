@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ContratosClient.php';
 
@@ -32,22 +31,21 @@ try {
                 echo json_encode(['error' => $resp['__error'], 'debug' => (isset($resp['__debug']) ? $resp['__debug'] : null), 'params' => $params]);
                 exit;
             }
-            $lote = $resp['resultado'] ?? [];
+            $lote = isset($resp['resultado']) ? $resp['resultado'] : array();
             if (!is_array($lote) || !count($lote)) break;
             foreach ($lote as $rec) {
-                $key = (
-                    ($rec['numeroContrato'] ?? '') . '|' .
-                    ($rec['numeroCompra'] ?? '') . '|' .
-                    ($rec['anoCompra'] ?? '') . '|' .
-                    ($rec['numeroItem'] ?? '') . '|' .
-                    ($rec['niFornecedor'] ?? '') . '|' .
-                    ($rec['valorUnitarioItem'] ?? '')
-                );
+                $numeroContrato = isset($rec['numeroContrato']) ? $rec['numeroContrato'] : '';
+                $numeroCompra = isset($rec['numeroCompra']) ? $rec['numeroCompra'] : '';
+                $anoCompra = isset($rec['anoCompra']) ? $rec['anoCompra'] : '';
+                $numeroItem = isset($rec['numeroItem']) ? $rec['numeroItem'] : '';
+                $niFornecedor = isset($rec['niFornecedor']) ? $rec['niFornecedor'] : '';
+                $valorUnitarioItem = isset($rec['valorUnitarioItem']) ? $rec['valorUnitarioItem'] : '';
+                $key = $numeroContrato . '|' . $numeroCompra . '|' . $anoCompra . '|' . $numeroItem . '|' . $niFornecedor . '|' . $valorUnitarioItem;
                 if (isset($uniq[$key])) continue;
                 $uniq[$key] = 1;
                 $lista[] = $rec;
             }
-            $rest = $resp['paginasRestantes'] ?? null;
+            $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
             if ($rest !== null && (int)$rest <= 0) break;
             $p++; if ($p > 2000) break;
         }

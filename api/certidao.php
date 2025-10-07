@@ -1,9 +1,9 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/TCUClient.php';
 
-$cnpj = preg_replace('/\D+/', '', (string)($_GET['cnpj'] ?? ''));
+$cnpjParam = isset($_GET['cnpj']) ? $_GET['cnpj'] : '';
+$cnpj = preg_replace('/\D+/', '', (string) $cnpjParam);
 if (strlen($cnpj) !== 14) {
     http_response_code(400);
     header('Content-Type: text/plain; charset=utf-8');

@@ -1,13 +1,23 @@
 <?php
-declare(strict_types=1);
 
 class HttpClient
 {
     /**
+     * @param string $fullUrl
+     * @param bool $useCache
+     * @param int $cacheTtlSec
+     * @param int $maxRetries
+     * @param float $baseBackoff
      * @return array<string,mixed>
      */
-    public static function getJsonWithRetry(string $fullUrl, bool $useCache = true, int $cacheTtlSec = 600, int $maxRetries = 6, float $baseBackoff = 1.0): array
+    public static function getJsonWithRetry($fullUrl, $useCache = true, $cacheTtlSec = 600, $maxRetries = 6, $baseBackoff = 1.0)
     {
+        $fullUrl = (string) $fullUrl;
+        $useCache = (bool) $useCache;
+        $cacheTtlSec = (int) $cacheTtlSec;
+        $maxRetries = (int) $maxRetries;
+        $baseBackoff = (float) $baseBackoff;
+
         $cacheKey = sys_get_temp_dir() . '/arp_cache_' . sha1($fullUrl) . '.json';
         if ($useCache && is_file($cacheKey) && (time() - filemtime($cacheKey) <= $cacheTtlSec)) {
             $json = json_decode((string) file_get_contents($cacheKey), true);
@@ -19,16 +29,16 @@ class HttpClient
         while (true) {
             $attempt++;
             $ch = curl_init($fullUrl);
-            curl_setopt_array($ch, [
+            curl_setopt_array($ch, array(
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_CONNECTTIMEOUT => 20,
                 CURLOPT_TIMEOUT        => 45,
-                CURLOPT_HTTPHEADER     => [
+                CURLOPT_HTTPHEADER     => array(
                     'Accept: */*',
                     'User-Agent: salc-modelos/1.0 (+retry/backoff)'
-                ],
-                CURLOPT_HEADERFUNCTION => function($curl, $header) use (&$respHeaders) {
+                ),
+                CURLOPT_HEADERFUNCTION => function ($curl, $header) use (&$respHeaders) {
                     $len = strlen($header);
                     $parts = explode(':', $header, 2);
                     if (count($parts) === 2) {
@@ -36,7 +46,7 @@ class HttpClient
                     }
                     return $len;
                 }
-            ]);
+            ));
             $body = curl_exec($ch);
             $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $err  = curl_error($ch);
@@ -44,7 +54,7 @@ class HttpClient
 
             if ($body !== false && $code >= 200 && $code < 300) {
                 $json = json_decode($body, true);
-                if (!is_array($json)) return ['__error' => 'JSON inválido', '__debug' => $body];
+                if (!is_array($json)) return array('__error' => 'JSON inválido', '__debug' => $body);
                 if ($useCache) {
                     $tmp = $cacheKey . '.tmp';
                     @file_put_contents($tmp, $body, LOCK_EX);
@@ -72,7 +82,7 @@ class HttpClient
                 }
             }
 
-            return ['__error' => "HTTP $code", '__debug' => ($body ? $body : $err)];
+            return array('__error' => "HTTP $code", '__debug' => ($body ? $body : $err));
         }
     }
 }

@@ -1,19 +1,36 @@
 <?php
-declare(strict_types=1);
 
 class Env
 {
-    private static array $vars = [];
+    /** @var array */
+    private static $vars = array();
 
-    public static function load(string $path): void
+    /**
+     * @param string $path
+     * @return void
+     */
+    public static function load($path)
     {
-        if (!is_file($path)) return;
-        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+        if (!is_file($path)) {
+            return;
+        }
+
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            $lines = array();
+        }
+
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($line === '' || str_starts_with($line, '#')) continue;
+            if ($line === '' || strpos($line, '#') === 0) {
+                continue;
+            }
+
             $pos = strpos($line, '=');
-            if ($pos === false) continue;
+            if ($pos === false) {
+                continue;
+            }
+
             $key = trim(substr($line, 0, $pos));
             $val = trim(substr($line, $pos + 1));
             $val = trim($val, "\"' ");
@@ -21,7 +38,12 @@ class Env
         }
     }
 
-    public static function get(string $key, mixed $default = null): mixed
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public static function get($key, $default = null)
     {
         return array_key_exists($key, self::$vars) ? self::$vars[$key] : $default;
     }

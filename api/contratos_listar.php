@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ContratosListaClient.php';
 
@@ -37,10 +36,12 @@ try {
             }
             $lote = isset($resp['resultado']) && is_array($resp['resultado']) ? $resp['resultado'] : [];
             foreach ($lote as $rec) {
-                $key = (string)($rec['numeroContrato'] ?? '') . '|' . (string)($rec['numeroCompra'] ?? '');
+                $numContrato = isset($rec['numeroContrato']) ? (string) $rec['numeroContrato'] : '';
+                $numCompra = isset($rec['numeroCompra']) ? (string) $rec['numeroCompra'] : '';
+                $key = $numContrato . '|' . $numCompra;
                 if (isset($uniq[$key])) continue; $uniq[$key] = 1; $lista[] = $rec;
             }
-            $rest = $resp['paginasRestantes'] ?? null;
+            $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
             if ($rest !== null && (int)$rest <= 0) break;
             $p++; if ($p > 2000) break;
         }

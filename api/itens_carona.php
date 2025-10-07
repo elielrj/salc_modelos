@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 require_once __DIR__ . '/../app/config.php';
 require_once __DIR__ . '/../app/api/ARPItensClient.php';
 require_once __DIR__ . '/../app/models/Item.php';
@@ -25,7 +24,7 @@ try {
     }
     $header = fgetcsv($fh, 0, ',');
     while (($row = fgetcsv($fh, 0, ',')) !== false) {
-        $cod = trim((string)($row[0] ?? ''));
+        $cod = trim((string) (isset($row[0]) ? $row[0] : ''));
         if ($cod === '' || $cod === '160517') {
             continue;
         }
@@ -34,9 +33,9 @@ try {
         }
         $uasgs[$cod] = [
             'codug' => $cod,
-            'sigla' => trim((string)($row[1] ?? '')),
-            'cma' => trim((string)($row[2] ?? '')),
-            'descricao' => trim((string)($row[3] ?? '')),
+            'sigla' => trim((string) (isset($row[1]) ? $row[1] : '')),
+            'cma' => trim((string) (isset($row[2]) ? $row[2] : '')),
+            'descricao' => trim((string) (isset($row[3]) ? $row[3] : '')),
         ];
     }
     fclose($fh);
@@ -65,12 +64,12 @@ try {
                 $falhas[] = [
                     'uasg' => $cod,
                     'message' => $resp['__error'],
-                    'debug' => $resp['__debug'] ?? null,
+                    'debug' => isset($resp['__debug']) ? $resp['__debug'] : null,
                     'pagina' => $pagina,
                 ];
                 break;
             }
-            $lote = $resp['resultado'] ?? [];
+            $lote = isset($resp['resultado']) ? $resp['resultado'] : array();
             if (!is_array($lote) || !count($lote)) {
                 break;
             }
@@ -86,10 +85,10 @@ try {
                     $item['siglaUnidadeGerenciadora'] = $meta['sigla'];
                 }
                 $key = sprintf('%s|%s|%s|%s',
-                    (string)($item['codigoUnidadeGerenciadora'] ?? $cod),
-                    (string)($item['numeroCompra'] ?? ''),
-                    (string)($item['anoCompra'] ?? ''),
-                    (string)($item['numeroItem'] ?? '')
+                    (string) (isset($item['codigoUnidadeGerenciadora']) ? $item['codigoUnidadeGerenciadora'] : $cod),
+                    (string) (isset($item['numeroCompra']) ? $item['numeroCompra'] : ''),
+                    (string) (isset($item['anoCompra']) ? $item['anoCompra'] : ''),
+                    (string) (isset($item['numeroItem']) ? $item['numeroItem'] : '')
                 );
                 if (isset($seen[$key])) {
                     continue;
@@ -97,7 +96,7 @@ try {
                 $seen[$key] = true;
                 $lista[] = $item;
             }
-            $rest = $resp['paginasRestantes'] ?? null;
+            $rest = isset($resp['paginasRestantes']) ? $resp['paginasRestantes'] : null;
             if ($rest !== null && (int)$rest <= 0) {
                 break;
             }
@@ -116,7 +115,7 @@ try {
         'consultasEfetuadas' => $consultas,
         'falhas' => $falhas,
     ]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
         'error' => 'internal',

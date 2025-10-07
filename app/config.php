@@ -1,6 +1,5 @@
 <?php
-declare(strict_types=1);
-// Load polyfills first for PHP 7.4 compatibility
+// Load polyfills first for PHP 5.6 compatibility helpers
 require_once __DIR__ . '/polyfills.php';
 
 require_once __DIR__ . '/Env.php';

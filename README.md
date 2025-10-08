@@ -91,9 +91,13 @@ A aplicação é totalmente em PHP (sem frameworks), com UI em Bootstrap, e exp�
 - Variáveis de ambiente (`.env`)
   - `UASG` (padrão `160517`)
   - `TIMEZONE` (padrão `America/Sao_Paulo`)
-  - `CACHE_TTL` (segundos, padrão `600`)
-  - `MAX_RETRIES` (padrão `6`)
-  - `BASE_BACKOFF` (padrão `1.0`)
+- `CACHE_TTL` (segundos, padrão `600`)
+- `MAX_RETRIES` (padrão `6`)
+- `BASE_BACKOFF` (padrão `1.0`)
+- `HTTP_IPRESOLVE` (padrão `v4`; valores aceitos: `auto`, `v4`, `v6`)
+- `HTTP_PROXY_URL` (opcional; ex.: `http://usuario:senha@proxy:3128`)
+- `HTTP_PROXY_USERPWD` (opcional; usuário:senha quando não estiver embedado na URL)
+- `HTTP_NOPROXY` (lista separada por vírgula de hosts que devem ignorar o proxy)
 - Subir via Docker
   1. Copie `.env.example` para `.env` e ajuste conforme necessário.
   2. Execute: `docker compose up`.

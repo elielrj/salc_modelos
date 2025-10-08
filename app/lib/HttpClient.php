@@ -26,10 +26,24 @@ class HttpClient
 
         $attempt = 0;
         $respHeaders = [];
+        $parsed = parse_url($fullUrl);
+        $host = isset($parsed['host']) ? $parsed['host'] : null;
+        $scheme = isset($parsed['scheme']) ? strtolower($parsed['scheme']) : 'http';
+        $port = isset($parsed['port']) ? (int)$parsed['port'] : ($scheme === 'https' ? 443 : 80);
+        $forceResolve = false;
+        $resolveEntry = null;
+
+        if ($host && filter_var($host, FILTER_VALIDATE_IP) === false) {
+            $resolved = @gethostbyname($host);
+            if ($resolved && $resolved !== $host && filter_var($resolved, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $resolveEntry = $host . ':' . $port . ':' . $resolved;
+            }
+        }
+
         while (true) {
             $attempt++;
             $ch = curl_init($fullUrl);
-            curl_setopt_array($ch, array(
+            $opts = array(
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_CONNECTTIMEOUT => 20,
@@ -46,10 +60,35 @@ class HttpClient
                     }
                     return $len;
                 }
-            ));
+            );
+
+            if (defined('HTTP_IPRESOLVE') && HTTP_IPRESOLVE !== 'auto' && defined('CURLOPT_IPRESOLVE')) {
+                if (HTTP_IPRESOLVE === 'v4' && defined('CURL_IPRESOLVE_V4')) {
+                    $opts[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V4;
+                } elseif (HTTP_IPRESOLVE === 'v6' && defined('CURL_IPRESOLVE_V6')) {
+                    $opts[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V6;
+                }
+            }
+
+            if (defined('HTTP_PROXY_URL') && HTTP_PROXY_URL !== '') {
+                $opts[CURLOPT_PROXY] = HTTP_PROXY_URL;
+                if (defined('HTTP_PROXY_USERPWD') && HTTP_PROXY_USERPWD !== '') {
+                    $opts[CURLOPT_PROXYUSERPWD] = HTTP_PROXY_USERPWD;
+                }
+                if (defined('HTTP_NOPROXY') && HTTP_NOPROXY !== '' && defined('CURLOPT_NOPROXY')) {
+                    $opts[CURLOPT_NOPROXY] = HTTP_NOPROXY;
+                }
+            }
+
+            if ($forceResolve && $resolveEntry && defined('CURLOPT_RESOLVE')) {
+                $opts[CURLOPT_RESOLVE] = array($resolveEntry);
+            }
+
+            curl_setopt_array($ch, $opts);
             $body = curl_exec($ch);
             $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $err  = curl_error($ch);
+            $errno = curl_errno($ch);
             curl_close($ch);
 
             if ($body !== false && $code >= 200 && $code < 300) {
@@ -78,6 +117,15 @@ class HttpClient
                 }
                 if ($attempt <= $maxRetries) {
                     usleep(max(1, (int) ($waitSec * 1000000)));
+                    continue;
+                }
+            }
+
+            if (!$forceResolve && $resolveEntry && defined('CURLOPT_RESOLVE')) {
+                if ($errno === CURLE_OPERATION_TIMEDOUT || $errno === CURLE_COULDNT_RESOLVE_HOST || $errno === CURLE_COULDNT_CONNECT) {
+                    $forceResolve = true;
+                    $attempt--;
+                    usleep(150000); // pequeno intervalo antes do retry com IP fixo
                     continue;
                 }
             }

@@ -1,4 +1,4 @@
-<h3>Itens vigentes — UASG <span id="uasgCurrent"><?= htmlspecialchars((string)UASG, ENT_QUOTES, 'UTF-8') ?></span></h3>
+<h3>Itens vigentes - UASG <span id="uasgCurrent"><?= htmlspecialchars((string)UASG, ENT_QUOTES, 'UTF-8') ?></span></h3>
 <div class="uasg-picker">
   <label for="selUasg" class="small">UG:</label>
   <select id="selUasg" class="form-select form-select-sm" style="max-width:220px;"></select>
@@ -19,14 +19,14 @@
     <tr>
       <th class="checkcol noclick"><input type="checkbox" id="selAll" title="Selecionar todos"></th>
       <th class="rownum" data-sort="rownum">Ord <span class="sort-ind"></span></th>
-      <th class="center" data-sort="compraitem">Pregão <span class="sort-ind"></span></th>
+      <th class="center col-pregao" data-sort="compraitem">Pregão <span class="sort-ind"></span></th>
       <th class="center" data-sort="texto">Descrição <span class="sort-ind"></span></th>
       <th class="center" data-sort="texto">Fornecedor <span class="sort-ind"></span></th>
       <th class="right" data-sort="numero">Qtd <span class="sort-ind"></span></th>
       <th class="right" data-sort="moeda">Valor Unit. <span class="sort-ind"></span></th>
       <th class="right" data-sort="moeda">Valor Total <span class="sort-ind"></span></th>
-      <th data-sort="vigencia">Vigência <span class="sort-ind"></span></th>
-      <th data-sort="texto">Tipo <span class="sort-ind"></span></th>
+      <th class="col-vigencia" data-sort="vigencia">Vigência <span class="sort-ind"></span></th>
+      <th class="col-tipo" data-sort="texto">Tipo <span class="sort-ind"></span></th>
       <th data-sort="texto">SICAF <span class="sort-ind"></span></th>
       <th class="right" data-sort="numero">NE <span class="sort-ind"></span></th>
       <th class="noclick">TCU</th>
@@ -64,3 +64,4 @@
     </tr>
   </tfoot>
   </table>
+

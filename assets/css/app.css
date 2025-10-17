@@ -57,6 +57,15 @@ body { margin: 0; }
 #itens .rownum, #contratos .rownum, #contratos-listar .rownum, #atas .rownum { width: 42px; text-align: center; color: #444; }
 #itens .checkcol, #contratos .checkcol, #contratos-listar .checkcol, #atas .checkcol { width: 34px; text-align: center; }
 
+/* Largura mínima (4 cm) para colunas solicitadas em Itens de Pregão */
+#itens #tPrincipal th.col-pregao { min-width: 4cm; }
+#itens #tPrincipal th.col-vigencia { min-width: 4cm; }
+#itens #tPrincipal th.col-tipo { min-width: 4cm; }
+/* Aplicar também nos dados (td) via nth-child para refletir na coluna inteira */
+#itens #tPrincipal tbody td:nth-child(3) { min-width: 4cm; }
+#itens #tPrincipal tbody td:nth-child(9) { min-width: 4cm; }
+#itens #tPrincipal tbody td:nth-child(10) { min-width: 4cm; }
+
 #itens .btn-mini, #contratos .btn-mini { display: inline-block; padding:6px 10px; border:1px solid #ccc; background:#fff; cursor: pointer; border-radius:6px; }
 #itens .btn-mini:hover, #contratos .btn-mini:hover { background:#fafafa; }
 

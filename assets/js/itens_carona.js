@@ -138,8 +138,21 @@
   }
 
   document.addEventListener('DOMContentLoaded', ()=>{
-    const trigger=document.querySelector('a[href="#itens-carona"]'); trigger?.addEventListener('shown.bs.tab', init);
-    const pane=document.getElementById('itens-carona'); if(pane && pane.classList.contains('show')) init();
+    const trigger=document.querySelector('a[href="#itens-carona"]');
+    if(trigger){
+      trigger.addEventListener('shown.bs.tab', (ev)=>{
+        init();
+        // Garantir que a aba de UGs não permaneça ativa/visível quando esta for aberta
+        const ugsPane = document.getElementById('ugs');
+        if(ugsPane){ ugsPane.classList.remove('show','active'); }
+      });
+    }
+    const pane=document.getElementById('itens-carona');
+    if(pane && pane.classList.contains('show')){
+      // Se for carregada já ativa, também desativa a aba de UGs
+      const ugsPane = document.getElementById('ugs');
+      if(ugsPane){ ugsPane.classList.remove('show','active'); }
+      init();
+    }
   });
 })();
-

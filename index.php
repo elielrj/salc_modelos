@@ -75,7 +75,7 @@ if (isset($_GET['certidao'])) {
                             <ul class="dropdown-menu" aria-labelledby="navConsultas">
                                 <li><a class="dropdown-item" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="tab" href="#contratos-listar" role="tab">Listar Contratos</a></li>
-                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#sped" role="tab">SPED 3.0</a></li>
+                                
                             </ul>
                         </li>
                     </ul>
@@ -111,9 +111,7 @@ if (isset($_GET['certidao'])) {
             <div class="tab-pane fade show active" id="ugs" role="tabpanel">
                 <?php include __DIR__ . '/views/ugs.php'; ?>
             </div>
-            <div class="tab-pane fade" id="sped" role="tabpanel">
-                <?php include __DIR__ . '/views/sped.php'; ?>
-            </div>
+            
             <div class="tab-pane fade" id="contratos" role="tabpanel">
                 <?php include __DIR__ . '/views/contratos.php'; ?>
             </div>

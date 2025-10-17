@@ -16,3 +16,11 @@
   <li><a class="btn btn-success my-1" href="https://docs.google.com/document/d/1NnXmHqob_MqY-CepfvAcsP2gdr5SbewI/edit?usp=sharing" target="_blank" rel="noopener">Termo de Dispensa</a></li>
 </ol>
 
+<!-- Destaque SPED 3.0 -->
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">SPED 3.0</h5>
+    <p class="card-text small">Roteiro com orientacoes para processos digitais.</p>
+    <a class="btn btn-primary btn-lg d-block w-100" href="https://drive.google.com/file/d/16TvzMu2xNiullWNlTg12YKKWmuUxZoyh/view?usp=sharing" target="_blank" rel="noopener">Roteiro de Processos Digitais</a>
+  </div>
+</div>

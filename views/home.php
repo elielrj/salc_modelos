@@ -10,6 +10,5 @@
     <a class="btn btn-outline-primary btn-sm" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
     <a class="btn btn-outline-primary btn-sm" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a>
     <a class="btn btn-outline-primary btn-sm" data-bs-toggle="tab" href="#ugs" role="tab">UGs</a>
-    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="tab" href="#sped" role="tab">Processos Digitais SPED 3.0</a>
   </div>
 </div>

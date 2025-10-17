@@ -12,3 +12,12 @@
   <li><a class="btn btn-success my-1" href="https://docs.google.com/document/d/1NnXmHqob_MqY-CepfvAcsP2gdr5SbewI/edit?usp=sharing" target="_blank" rel="noopener">Termo de Dispensa</a></li>
 </ol>
 
+<!-- Destaque SPED 3.0 -->
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">SPED 3.0</h5>
+    <p class="card-text small">Orientações para a etapa de execução no SPED.</p>
+    <a class="btn btn-primary btn-lg d-block w-100" href="https://drive.google.com/file/d/1On9WZyAphqvzFn0Is9yo2y99LSGV_f0S/view?usp=sharing" target="_blank" rel="noopener">Empenho, Liquidacao e Pagamento</a>
+  </div>
+  
+</div>

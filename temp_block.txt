@@ -1,0 +1,7 @@
+<th class="right" data-sort="moeda">Valor Total <span class="sort-ind"></span></th>
+      <th data-sort="vigencia">Vigência <span class="sort-ind"></span></th>
+      <th data-sort="texto">Tipo <span class="sort-ind"></span></th>
+      <th data-sort="texto">SICAF <span class="sort-ind"></span></th>
+      <th class="right" data-sort="numero">NE <span class="sort-ind"></span></th>
+      <th class="noclick">TCU</th>
+    

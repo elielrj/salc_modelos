@@ -15,16 +15,10 @@
 <div class="meta" id="caronaLoading">Aguardando início do carregamento...</div>
 
 <!-- Filtros -->
-<div id="caronaCompraFilter" class="compra-filter" aria-label="Filtro por Pregão">
-  <label for="caronaSelPregao" class="small">Filtrar por Pregão:</label>
-  <select id="caronaSelPregao" class="form-select form-select-sm" style="max-width:260px;">
-    <option value="">Todos</option>
-  </select>
-  <span class="small text-muted" style="margin-left:8px;">(Carrega progressivamente todas as UGs exceto 160517)</span>
-  </div>
+<!-- Filtro por Pregão removido a pedido: caronaCompraFilter -->
 <div id="caronaSearchFilter" class="search-filter">
   <input type="text" id="caronaTxtSearch" placeholder="Filtrar por descrição" aria-label="Filtrar por descrição" />
-  <button type="button" id="caronaBtnClearSearch" class="btn-mini" title="Limpar busca">✕</button>
+  <button type="button" id="caronaBtnClearSearch" class="btn-mini" title="Limpar busca">×</button>
   <span id="caronaFilterCount" class="small" style="margin-left:8px;"></span>
 </div>
 
@@ -47,7 +41,7 @@
   <button class="btn-mini" id="caronaBtnCopy">Copiar tabela</button>
   <button class="btn-mini" id="caronaBtnPrint">Imprimir PDF</button>
   <span class="small" id="caronaCopyMsg" style="margin-left:8px;"></span>
-</div>
+  </div>
 <table id="caronaSel">
   <thead>
     <tr>
@@ -72,3 +66,4 @@
     </tr>
   </tfoot>
 </table>
+

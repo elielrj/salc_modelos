@@ -7,6 +7,12 @@ body { margin: 0; }
 /* Mantém as abas de navegação centralizadas na largura total */
 .nav.nav-tabs { justify-content: center; }
 
+/* Navbar (menu agrupado) */
+.navbar .nav-link { font-weight: 500; }
+.navbar .nav-link.active { color: #0d6efd; }
+.navbar .dropdown-item.active { font-weight: 600; background-color: #e7f1ff; }
+.navbar .dropdown-toggle.active { color: #0d6efd; }
+
 /* Centraliza blocos largos mantendo responsividade */
 .centered-block { max-width: 1200px; margin-left: auto; margin-right: auto; }
 

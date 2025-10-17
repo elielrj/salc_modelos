@@ -28,24 +28,60 @@ if (isset($_GET['certidao'])) {
     <div class="container-fluid py-5">
         <h1 class="text-center mb-4">Modelos &amp; Controle de Pregões e Contratos</h1>
 
-        <!-- Navegação -->
-        <ul class="nav nav-tabs mb-4" id="menuTabs" role="tablist">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#ugs" role="tab">UGs</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#pregao" role="tab">Pregão</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#carona" role="tab">Carona</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#dispensa" role="tab">Dispensa</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#requisitoria"
-                    role="tab">Requisitórias</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#termo" role="tab">Termo de
-                    Referência</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a>
-            </li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#itens-carona" role="tab">Itens de Pregão Carona</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos" role="tab">Itens Contrato</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#contratos-listar" role="tab">Listar Contratos</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#sped" role="tab">SPED 3.0</a></li>
-        </ul>
+        <!-- Navegação (agrupada e responsiva) -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded shadow-sm mb-4" aria-label="Navegação principal">
+            <div class="container-fluid">
+                <a class="navbar-brand d-none d-lg-inline" href="#">Menu</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Alternar navegação">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mx-auto align-items-lg-center gap-lg-2" id="menuTabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#ugs" role="tab"><i class="bi bi-building me-1"></i> UGs</a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navModelos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-file-earmark-text me-1"></i> Modelos
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navModelos">
+                                <li><h6 class="dropdown-header">Modelos de Processos</h6></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#pregao" role="tab">Pregão</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#dispensa" role="tab">Dispensa</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#carona" role="tab">Carona</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><h6 class="dropdown-header">Modelos de Documentos</h6></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#requisitoria" role="tab">Requisitórias</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#termo" role="tab">Termo de Referência</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navItens" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-list-check me-1"></i> Itens
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navItens">
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#itens" role="tab">Itens de Pregão</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#itens-carona" role="tab">Itens de Pregão Carona</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#contratos" role="tab">Itens Contrato</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navConsultas" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-search me-1"></i> Consultas
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navConsultas">
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#atas" role="tab">Lista de Atas</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#contratos-listar" role="tab">Listar Contratos</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="tab" href="#sped" role="tab">SPED 3.0</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
         <div class="tab-content">
             <div class="tab-pane fade" id="pregao" role="tabpanel">

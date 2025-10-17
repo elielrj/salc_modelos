@@ -905,3 +905,39 @@ function initContratosTab(){
   pane.dataset.bound='1';
   load();
 }
+
+// ===== Navegação por abas (navbar agrupada) =====
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const qs = (sel) => document.querySelector(sel);
+    const qsa = (sel) => Array.from(document.querySelectorAll(sel));
+    function activateTabByHash() {
+      const hash = location.hash && document.getElementById(location.hash.slice(1)) ? location.hash : '#ugs';
+      const trg = qs(`[data-bs-toggle="tab"][href="${hash}"]`) || qs(`[data-bs-toggle="tab"][data-bs-target="${hash}"]`);
+      if (trg && window.bootstrap && bootstrap.Tab) {
+        const t = bootstrap.Tab.getOrCreateInstance(trg);
+        t.show();
+      }
+    }
+    // Atualiza estilos ativos e hash
+    qsa('[data-bs-toggle="tab"]').forEach(el => {
+      el.addEventListener('shown.bs.tab', (ev) => {
+        const targetHash = ev.target.getAttribute('href') || ev.target.getAttribute('data-bs-target');
+        if (targetHash && location.hash !== targetHash) {
+          history.replaceState(null, '', targetHash);
+        }
+        // Clear
+        qsa('.navbar .nav-link').forEach(n => n.classList.remove('active'));
+        qsa('.navbar .dropdown-item').forEach(n => n.classList.remove('active'));
+        // Set current
+        ev.target.classList.add('active');
+        const dd = ev.target.closest('.dropdown');
+        if (dd) dd.querySelector('.dropdown-toggle')?.classList?.add('active');
+      }, { passive: true });
+    });
+    // inicializa pela hash
+    activateTabByHash();
+  } catch (e) {
+    console.warn('Init navbar/tabs falhou:', e);
+  }
+});

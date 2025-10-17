@@ -1,0 +1,13 @@
+        tr.innerHTML = `
+          <td class="checkcol"><input type="checkbox" class="sel" data-rowid="${CSS.escape(rowKey)}" data-compra="${compra}" data-item="${itemNum}" data-desc="${it.descricaoItem||''}" data-forn="${it.nomeRazaoSocialFornecedor||''}" data-ni="${ni}" data-qtd="${it.quantidadeHomologadaItem||0}" data-vu="${it.valorUnitario||0}" data-ug="${ugCode}" data-uglabel="${ugLabel.replace(/\"/g,'&quot;')}"></td>
+          <td class="rownum">${idx+1}</td>
+          <td class="left nowrap"><div><strong>${compra||'-'}</strong></div><div class="small">Item: ${itemNum||'-'}</div></td>
+          <td class="left">${(it.descricaoItem||'-')}${it.codigoItem? `<div class=\"small\">Código Item: ${it.codigoItem}</div>`:''}${it.idCompra? `<div class=\"small\">PNCP: ${it.idCompra}</div>`:''}</td>
+          <td class="center">${(it.quantidadeHomologadaItem||0).toLocaleString('pt-BR')}</td>
+          <td class="center">${fmtBRL(it.valorUnitario||0)}</td>
+          <td class="center">${fmtDate(it.dataVigenciaInicial)} à ${fmtDate(it.dataVigenciaFinal)}</td>
+          <td class="center ${sicafClass}"><i class="bi bi-hand-thumbs-up" title="${sicafText}" aria-label="${sicafText}"></i></td>
+          <td class="center">${(it.quantidadeEmpenhada||0).toLocaleString('pt-BR')}</td>
+          <td class="center nowrap">${ni? `<a href="api/certidao.php?cnpj=${ni}" target="_blank" rel="noopener" title="Certidão TCU"><i class="bi bi-book"></i></a>` : '-'}</td>`;
+        frag.appendChild(tr);
+      });

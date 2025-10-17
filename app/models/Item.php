@@ -15,6 +15,7 @@ class Item
             'numeroItem' => isset($it['numeroItem']) ? $it['numeroItem'] : '',
             'descricaoItem' => isset($it['descricaoItem']) ? $it['descricaoItem'] : '',
             'codigoItem' => isset($it['codigoItem']) ? $it['codigoItem'] : null,
+            'idCompra' => isset($it['idCompra']) ? $it['idCompra'] : (isset($it['idCompraPNCP']) ? $it['idCompraPNCP'] : null),
             'nomeRazaoSocialFornecedor' => isset($it['nomeRazaoSocialFornecedor']) ? $it['nomeRazaoSocialFornecedor'] : '',
             'niFornecedor' => $ni,
             'quantidadeHomologadaItem' => (float)(isset($it['quantidadeHomologadaItem']) ? $it['quantidadeHomologadaItem'] : 0),

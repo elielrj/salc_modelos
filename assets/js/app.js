@@ -401,19 +401,23 @@ function initUGsTab(){
   const pane = document.getElementById('ugs');
   if(!pane || pane.dataset.loaded==='1') return;
   const tbody = document.querySelector('#tUGs tbody'); if(!tbody) return;
-  const loadingRow = document.createElement('tr'); loadingRow.innerHTML = `<td colspan="5">Carregando UGs...</td>`; tbody.appendChild(loadingRow);
+  const loadingRow = document.createElement('tr'); loadingRow.innerHTML = `<td colspan="6">Carregando UGs...</td>`; tbody.appendChild(loadingRow);
   fetch('api/ugs.php')
     .then(r=>r.json())
     .then(j=>{
       tbody.innerHTML='';
       (j.ugs||[]).forEach((u)=>{
         const tr=document.createElement('tr');
+        const ce = String(u.cidade_estado||'');
+        let cidade = ce, uf = '';
+        if (ce.includes('/')) { const parts = ce.split('/'); cidade = (parts[0]||'').trim(); uf = (parts[1]||'').trim(); }
         tr.innerHTML = `
           <td class="rownum"></td>
           <td class="right">${u.codug||''}</td>
           <td>${u.sigla||''}</td>
           <td>${u.cma||''}</td>
-          <td>${u.cidade_estado||''}</td>`;
+          <td>${cidade}</td>
+          <td>${uf}</td>`;
         tbody.appendChild(tr);
       });
       // numerar linhas
@@ -421,7 +425,7 @@ function initUGsTab(){
       pane.dataset.loaded='1';
       initUGsSort();
     })
-    .catch(()=>{ tbody.innerHTML = '<tr><td colspan="5">Falha ao carregar UGs.</td></tr>'; });
+    .catch(()=>{ tbody.innerHTML = '<tr><td colspan="6">Falha ao carregar UGs.</td></tr>'; });
 }
 
 // ===== Listar Contratos (sem itens)
